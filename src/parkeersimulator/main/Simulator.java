@@ -3,41 +3,40 @@ package parkeersimulator.main;
 import parkeersimulator.controller.Controller;
 import parkeersimulator.model.Model;
 import parkeersimulator.view.CarParkView;
-import parkeersimulator.view.Text;
+import parkeersimulator.view.QueueView;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class Simulator extends JFrame {
-    private CarParkView carParkView;
+
     private Model model;
     private Controller controller;
+    private CarParkView carParkView;
+    private QueueView quequeView;
 
 
     public Simulator(){
         this.setTitle("parkeersimulator");
         model=new Model(3,6,30);
         carParkView = new CarParkView(model);
-        //test
-        controller  = new Controller(model);
-        Text carParkView3 = new Text(model);
-        Text carParkView4 = new Text(model);
-        Text carParkView5 = new Text(model);
-        //test
+        quequeView=new QueueView(model);
+        controller=new Controller(model);
+
         Container contentPane = getContentPane();
-        //test
         contentPane.add(carParkView, BorderLayout.CENTER);
-        contentPane.add(controller, BorderLayout.WEST);
-        contentPane.add(carParkView3, BorderLayout.NORTH);
-        contentPane.add(carParkView4, BorderLayout.EAST);
-        contentPane.add(carParkView5, BorderLayout.SOUTH);
-        //test
+        contentPane.add(quequeView, BorderLayout.EAST);
+        contentPane.add(controller,BorderLayout.WEST);
+        //temporary- application stops running on frame exit
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         pack();
 
         setVisible(true);
 
         carParkView.updateView();
+        quequeView.updateView();
+
 
 
 

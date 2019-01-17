@@ -4,6 +4,8 @@ import parkeersimulator.model.Car;
 import parkeersimulator.model.Location;
 import parkeersimulator.model.Model;
 
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 
@@ -18,7 +20,7 @@ import java.awt.*;
          */
         public CarParkView(Model model ) {
             super(model);
-
+            setBorder(new EmptyBorder(30,30,30,30));
 
 
 
@@ -32,7 +34,7 @@ import java.awt.*;
          * Overridden. Tell the GUI manager how big we would like to be.
          */
         public Dimension getPreferredSize() {
-            return new Dimension(800, 500);
+            return new Dimension(1000, 500);
         }
 
         /**
@@ -85,6 +87,8 @@ import java.awt.*;
                     20 - 1,
                     10 - 1); // TODO use dynamic size or constants
         }
+
+
     }
 
 

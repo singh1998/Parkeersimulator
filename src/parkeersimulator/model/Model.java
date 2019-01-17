@@ -317,6 +317,25 @@ public class Model extends AbstractModel {
         removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
+    //selfmade-get the number of cars that are  arriving and don't have a subscription
+    public int getPayingArrivingCars(){
+        return entranceCarQueue.carsInQueue();
+    }
+    //selfmade-get the number of cars that are  arriving  have a subscription
+    public int getSubscribtionArrivingCars(){
+        return  entrancePassQueue.carsInQueue();
+    }
+
+
+    //selfmade-get the number of cars that are leaving
+    public int getLeavingCars(){
+        return exitCarQueue.carsInQueue();
+    }
+
+    //selfmade-get the number of customers that are paying for their stay in the parking garage
+    public int getPayingCars(){
+       return paymentCarQueue.carsInQueue();
+    }
 
 
 }
