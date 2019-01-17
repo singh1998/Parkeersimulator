@@ -36,10 +36,10 @@ public class QueueView extends AbstractView{
     }
     @Override
     public void updateView() {
-        nonSubcriptionCustomers.setText("Arriverende klanten zonder abonnement: "+model.getPayingArrivingCars());
-        subscriptionCustomers.setText("Arriverende klanten met abonnement: "+model.getSubscribtionArrivingCars());
-        payingCustomers.setText("Betalende klanten: "+model.getPayingCars());
-        leavingCustomers.setText("Vertrekkende klanten: "+model.getLeavingCars());
+        nonSubcriptionCustomers.setText("Klanten in de wachtrij zonder abonnement: "+model.getPayingArrivingCars());
+        subscriptionCustomers.setText("Klanten in de wachtrij met abonnement: "+model.getSubscribtionArrivingCars());
+        payingCustomers.setText("Klanten in de rij om te betalen: "+model.getPayingCars());
+        leavingCustomers.setText("Klanten in de rij om te vertrekken : "+model.getLeavingCars());
 
         super.updateView();
     }
