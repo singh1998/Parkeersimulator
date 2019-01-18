@@ -157,11 +157,12 @@ public class Model extends AbstractModel {
 
 
 
-    //can only be run in via simulator.java
+    //can only be run in via simulator.java, otherwize screen freezes
 
     public void runEndless() {
         for (int i = 0; i < 10000; i++) {
             tick();
+
 
         }
     }
@@ -169,9 +170,13 @@ public class Model extends AbstractModel {
     public void oneStep(){
         tick();
 
+
+
+
     }
     //selfmade hundred steps
     public void hundredSteps(){
+
         for (int i = 0; i < 100; i++) {
             tick();
 
@@ -184,6 +189,7 @@ public class Model extends AbstractModel {
         advanceTime();
         handleExit();
         updateViews();
+
         // Pause.
         try {
             Thread.sleep(tickPause);
@@ -317,22 +323,22 @@ public class Model extends AbstractModel {
         removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
     }
-    //selfmade-get the number of cars that are  arriving and don't have a subscription
+    //selfmade-get the number of cars that are in the arrivingqueue and don't have a subscription
     public int getPayingArrivingCars(){
         return entranceCarQueue.carsInQueue();
     }
-    //selfmade-get the number of cars that are  arriving  have a subscription
+    //selfmade-get the number of cars that are  in the arrivingqueue  have a subscription
     public int getSubscribtionArrivingCars(){
         return  entrancePassQueue.carsInQueue();
     }
 
 
-    //selfmade-get the number of cars that are leaving
+    //selfmade-get the number of cars that are in the exitqueue
     public int getLeavingCars(){
         return exitCarQueue.carsInQueue();
     }
 
-    //selfmade-get the number of customers that are paying for their stay in the parking garage
+    //selfmade-get the number of customers that are in the payingqueue
     public int getPayingCars(){
        return paymentCarQueue.carsInQueue();
     }
