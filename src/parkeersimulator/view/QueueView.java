@@ -7,7 +7,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class QueueView extends AbstractView{
-    private JLabel nonSubcriptionCustomers;
+    private JLabel nonSubscriptionCustomers;
     private JLabel subscriptionCustomers;
     private JLabel payingCustomers;
     private JLabel leavingCustomers;
@@ -21,13 +21,13 @@ public class QueueView extends AbstractView{
         queueInfo=new JLabel("Rij informatie");
         Font font=new Font(queueInfo.getFont().getName(),Font.BOLD,15);
         queueInfo.setFont(font);
-        nonSubcriptionCustomers=new JLabel();
+        nonSubscriptionCustomers=new JLabel();
         subscriptionCustomers=new JLabel();
         payingCustomers=new JLabel();
         leavingCustomers=new JLabel();
         this.setLayout(new GridLayout(5,1));
         add(queueInfo);
-        add(nonSubcriptionCustomers);
+        add(nonSubscriptionCustomers);
         add(subscriptionCustomers);
         add(payingCustomers);
         add(leavingCustomers);
@@ -36,7 +36,7 @@ public class QueueView extends AbstractView{
     }
     @Override
     public void updateView() {
-        nonSubcriptionCustomers.setText("Klanten in de wachtrij zonder abonnement: "+model.getPayingArrivingCars());
+        nonSubscriptionCustomers.setText("Klanten in de wachtrij zonder abonnement: "+model.getPayingArrivingCars());
         subscriptionCustomers.setText("Klanten in de wachtrij met abonnement: "+model.getSubscribtionArrivingCars());
         payingCustomers.setText("Klanten in de rij om te betalen: "+model.getPayingCars());
         leavingCustomers.setText("Klanten in de rij om te vertrekken : "+model.getLeavingCars());

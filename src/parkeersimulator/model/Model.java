@@ -2,7 +2,6 @@
 
 package parkeersimulator.model;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Model extends AbstractModel {
@@ -16,9 +15,6 @@ public class Model extends AbstractModel {
     private static final String AD_HOC = "1";
     private static final String PASS = "2";
 
-    //selfmade for amounts in parking garage
-    private ArrayList<Car> paydCars;
-    private ArrayList<Car> subscribedCars;
 
     private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
@@ -41,11 +37,13 @@ public class Model extends AbstractModel {
     int paymentSpeed = 7; // number of cars that can pay per minute
     int exitSpeed = 5; // number of cars that can leave per minute
 
-    public Model(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
-        //self added for amount in parking garage
-        paydCars=new ArrayList<>();
-        subscribedCars=new ArrayList<>();
+    double pricePerHour = 2; // hourly price per car
+    double pricePerMinute = 0.03; // price per minute per car
+    double dailyRevenue = 0; // revenue earned per day
 
+    int counter = 0; // number that displays the number of ticks
+
+    public Model(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
@@ -105,22 +103,7 @@ public class Model extends AbstractModel {
         }
         cars[location.getFloor()][location.getRow()][location.getPlace()] = null;
         car.setLocation(null);
-
-
-        //selfplaced - remove a car from the the countinglists that count the amount of cars in the parking garage
-        if(car instanceof ParkingPassCar ){
-            subscribedCars.remove(car);
-
-        }
-        if(car instanceof AdHocCar){
-            paydCars.remove(car);
-        }
-
-
-
-
         numberOfOpenSpots++;
-
         return car;
     }
 
@@ -209,6 +192,9 @@ public class Model extends AbstractModel {
 
 
     private void tick() {
+        if(counter == 1440){
+            counter = 0;
+        }
         advanceTime();
         handleExit();
         updateViews();
@@ -220,6 +206,7 @@ public class Model extends AbstractModel {
             e.printStackTrace();
         }
         handleEntrance();
+        counter++;
     }
 
     private void advanceTime(){
@@ -271,18 +258,6 @@ public class Model extends AbstractModel {
                 getNumberOfOpenSpots()>0 &&
                 i<enterSpeed) {
             Car car = queue.removeCar();
-
-            //selfplaced-check if car is a ParkingPassCar or a AdHocCar and the add the car to the correct countinlist
-            if(car instanceof ParkingPassCar ){
-                subscribedCars.add(car);
-
-            }
-            if(car instanceof AdHocCar){
-                paydCars.add(car);
-            }
-
-
-
             Location freeLocation = getFirstFreeLocation();
             setCarAt(freeLocation, car);
             i++;
@@ -309,7 +284,7 @@ public class Model extends AbstractModel {
         int i=0;
         while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
             Car car = paymentCarQueue.removeCar();
-            // TODO Handle payment.
+            dailyRevenue += calculatePrice(); //(!)In de parameter moet nog het aantal minuten/uren worden neergezet dat een auto staat(!)
             carLeavesSpot(car);
             i++;
         }
@@ -377,14 +352,27 @@ public class Model extends AbstractModel {
     public int getPayingCars(){
        return paymentCarQueue.carsInQueue();
     }
-    //selfmade-get the amount of payd cars in the parking garage
-    public int getAmountPaydCars(){
-        return paydCars.size();
+
+    //selfmade-Calculates the price per hour or per minute the user needs to pay
+    public double calculatePrice()
+    {
+        double price = 0;
+        if(hour > 0){
+            price = pricePerHour * hour;
+            return price;
+        }
+        if(minute > 0 && hour < 0){
+            price = pricePerHour*(minute/60);
+            return price;
+        }
+        return price;
+
     }
 
-    //selfmade-get the amount of subscribed cars in the parking garage
-    public int getAmountSubscribedCars(){
-        return subscribedCars.size();
+    //selfmade-Get the actual daily revenue
+    public double getDailyRevenue()
+    {
+        return dailyRevenue;
     }
 
 

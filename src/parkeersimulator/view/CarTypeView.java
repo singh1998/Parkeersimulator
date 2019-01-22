@@ -12,27 +12,24 @@ public class CarTypeView extends AbstractView {
    private JLabel payd;
    private JLabel subscribed;
    private JLabel spots;
-
     public CarTypeView(Model model){
         super(model);
 
         red=new JLabel();
+        red.setSize(20,20);
+
         blue=new JLabel();
+        blue.setSize(20,20);
 
-
-        payd=new JLabel();
-        subscribed=new JLabel();
-
-
-
-
+        payd=new JLabel("Reguliere klanten");
+        subscribed=new JLabel("Klanten met abonnement");
         setLayout(new GridLayout(3,3));
         add(red);
         add(payd);
-        add(new JLabel());
+        add(new JPanel());
         add(blue);
         add(subscribed);
-        add(new JLabel());
+        add(new JPanel());
 
         spots =new JLabel();
         add(spots);
@@ -50,12 +47,9 @@ public class CarTypeView extends AbstractView {
 
 
     }
-    //
 
     @Override
     public void updateView() {
-        payd.setText("Reguliere klanten: "+model.getAmountPaydCars());
-        subscribed.setText("Klanten met abonnement: "+model.getAmountSubscribedCars()+"");
         spots.setText("Plekken vrij: "+model.getNumberOfOpenSpots());
         super.updateView();
     }
