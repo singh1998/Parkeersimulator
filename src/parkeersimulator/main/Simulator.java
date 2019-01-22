@@ -30,6 +30,7 @@ public class Simulator extends JFrame {
 
         Container contentPane = getContentPane();
         main.add(carParkView);
+
         main.add(carTypeView);
         main.setLayout(new BoxLayout(main,BoxLayout.Y_AXIS));
 
@@ -44,9 +45,7 @@ public class Simulator extends JFrame {
 
         setVisible(true);
 
-        carParkView.updateView();
-        quequeView.updateView();
-        carTypeView.updateView();
+        model.notifyViews();
 
 
 

@@ -2,6 +2,7 @@
 
 package parkeersimulator.model;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Model extends AbstractModel {
@@ -15,6 +16,9 @@ public class Model extends AbstractModel {
     private static final String AD_HOC = "1";
     private static final String PASS = "2";
 
+    //selfmade for amounts in parking garage
+    private ArrayList<Car> paydCars;
+    private ArrayList<Car> subscribedCars;
 
     private CarQueue entranceCarQueue;
     private CarQueue entrancePassQueue;
@@ -38,6 +42,10 @@ public class Model extends AbstractModel {
     int exitSpeed = 5; // number of cars that can leave per minute
 
     public Model(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
+        //self added for amount in parking garage
+        paydCars=new ArrayList<>();
+        subscribedCars=new ArrayList<>();
+
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
         this.numberOfPlaces = numberOfPlaces;
@@ -97,7 +105,22 @@ public class Model extends AbstractModel {
         }
         cars[location.getFloor()][location.getRow()][location.getPlace()] = null;
         car.setLocation(null);
+
+
+        //selfplaced - remove a car from the the countinglists that count the amount of cars in the parking garage
+        if(car instanceof ParkingPassCar ){
+            subscribedCars.remove(car);
+
+        }
+        if(car instanceof AdHocCar){
+            paydCars.remove(car);
+        }
+
+
+
+
         numberOfOpenSpots++;
+
         return car;
     }
 
@@ -248,6 +271,18 @@ public class Model extends AbstractModel {
                 getNumberOfOpenSpots()>0 &&
                 i<enterSpeed) {
             Car car = queue.removeCar();
+
+            //selfplaced-check if car is a ParkingPassCar or a AdHocCar and the add the car to the correct countinlist
+            if(car instanceof ParkingPassCar ){
+                subscribedCars.add(car);
+
+            }
+            if(car instanceof AdHocCar){
+                paydCars.add(car);
+            }
+
+
+
             Location freeLocation = getFirstFreeLocation();
             setCarAt(freeLocation, car);
             i++;
@@ -341,6 +376,15 @@ public class Model extends AbstractModel {
     //selfmade-get the number of customers that are in the payingqueue
     public int getPayingCars(){
        return paymentCarQueue.carsInQueue();
+    }
+    //selfmade-get the amount of payd cars in the parking garage
+    public int getAmountPaydCars(){
+        return paydCars.size();
+    }
+
+    //selfmade-get the amount of subscribed cars in the parking garage
+    public int getAmountSubscribedCars(){
+        return subscribedCars.size();
     }
 
 
