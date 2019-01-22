@@ -50,6 +50,7 @@ public class CarTypeView extends AbstractView {
 
 
     }
+    //
 
     @Override
     public void updateView() {
