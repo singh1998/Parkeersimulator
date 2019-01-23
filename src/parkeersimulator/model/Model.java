@@ -2,6 +2,7 @@
 
 package parkeersimulator.model;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -133,6 +134,20 @@ public class Model extends AbstractModel {
     public Location getFirstFreeLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) == null) {
+                        return location;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public Location getFirstFreePassLocation() {
+        for (int floor = getNumberOfFloors() - 1; floor < getNumberOfFloors() && (floor == 0 || floor > 0); floor--) {
+            for (int row = getNumberOfRows() - 1; row < getNumberOfRows() && (row == 0 || row > 0); row--) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
                     Location location = new Location(floor, row, place);
                     if (getCarAt(location) == null) {
@@ -281,7 +296,7 @@ public class Model extends AbstractModel {
                 getNumberOfOpenSpots()>0 &&
                 i<enterSpeed) {
             Car car = queue.removeCar();
-
+            Color color = car.getColor();
             //selfplaced-check if car is a ParkingPassCar or a AdHocCar and the add the car to the correct countinlist
             if(car instanceof ParkingPassCar ){
                 subscribedCars.add(car);
@@ -290,11 +305,14 @@ public class Model extends AbstractModel {
             if(car instanceof AdHocCar){
                 paydCars.add(car);
             }
-
-
-
-            Location freeLocation = getFirstFreeLocation();
-            setCarAt(freeLocation, car);
+            if(color == Color.blue){
+                Location freeLocation = getFirstFreePassLocation();
+                setCarAt(freeLocation, car);
+            }
+            else if(color == Color.red){
+                Location freeLocation = getFirstFreeLocation();
+                setCarAt(freeLocation, car);
+            }
             i++;
         }
     }
@@ -396,7 +414,18 @@ public class Model extends AbstractModel {
     public int getAmountSubscribedCars(){
         return subscribedCars.size();
     }
-
+    //selfmade-get the amount of minutes that have been passed
+    public int getMinutes(){
+        return minute;
+    }
+    //selfmade-get the amount of hours that have been passed
+    public int getHours(){
+        return hour;
+    }
+    //selfmade-get the amount of days that have been passed
+    public int getDays(){
+        return day;
+    }
     //selfmade-Calculates the price per hour or per minute the user needs to pay
     public double calculatePrice()
     {
