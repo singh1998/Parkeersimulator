@@ -41,7 +41,7 @@ public class QueueView extends AbstractView{
         payingCustomers.setText("Klanten in de rij om te betalen: "+model.getPayingCars());
         leavingCustomers.setText("Klanten in de rij om te vertrekken : "+model.getLeavingCars());
 
-        super.updateView();
+        repaint();
     }
 
 

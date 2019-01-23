@@ -23,7 +23,7 @@ public class RevenueView extends AbstractView{
     @Override
     public void updateView() {
         dailyRevenue.setText("Dagopbrengst: " + model.getDailyRevenue());
-        super.updateView();
+        repaint();
     }
 
 }

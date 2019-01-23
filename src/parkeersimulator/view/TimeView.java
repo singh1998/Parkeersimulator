@@ -45,6 +45,6 @@ public class TimeView extends AbstractView {
             hour.setText("Hours: "+model.getHours());
             day.setText("Days: "+model.getDays());
 
-            super.updateView();
+            repaint();
         }
 }
