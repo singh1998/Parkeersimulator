@@ -297,22 +297,17 @@ public class Model extends AbstractModel {
                 i<enterSpeed) {
             Car car = queue.removeCar();
             Color color = car.getColor();
-            //selfplaced-check if car is a ParkingPassCar or a AdHocCar and the add the car to the correct countinlist
+            //selfplaced-check if car is a ParkingPassCar or a AdHocCar and the add the car to the correct countinlist and control Passspaces
+             Location freeLocation;
             if(car instanceof ParkingPassCar ){
                 subscribedCars.add(car);
+                freeLocation = getFirstFreePassLocation();
 
-            }
-            if(car instanceof AdHocCar){
+            } else {
                 paydCars.add(car);
+                freeLocation = getFirstFreeLocation();
             }
-            if(color == Color.blue){
-                Location freeLocation = getFirstFreePassLocation();
-                setCarAt(freeLocation, car);
-            }
-            else if(color == Color.red){
-                Location freeLocation = getFirstFreeLocation();
-                setCarAt(freeLocation, car);
-            }
+            setCarAt(freeLocation, car);
             i++;
         }
     }
