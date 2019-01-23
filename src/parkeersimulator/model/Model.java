@@ -13,6 +13,8 @@ public class Model extends AbstractModel {
     private int numberOfPlaces;
     private int numberOfOpenSpots;
     private Car[][][] cars;
+    //selfmade check if hundred steps button is pressed
+    private boolean hundredEnabled;
 
     private static final String AD_HOC = "1";
     private static final String PASS = "2";
@@ -201,20 +203,112 @@ public class Model extends AbstractModel {
     }
 
 
+    public class TickThread implements Runnable{
+        @Override
+        public void run() {
+            if(hundredEnabled){
+                hundredSteps();
+            } else {
+                oneStep();
+            }
+            ticks=new Thread(new TickThread());
+        }
+        public void runEndless() {
+            for (int i = 0; i < 10000; i++) {
+                tick();
+
+
+            }
+        }
+        //self made one step
+        public void oneStep(){
+            tick();
+
+
+
+        }
+        //selfmade hundred steps
+        public void hundredSteps(){
+
+            for (int i = 0; i < 100; i++) {
+                tick();
+
+            }
+
+        }
+
+
+        private void tick() {
+            if(counter == 1440){
+                counter = 0;
+            }
+            advanceTime();
+            handleExit();
+
+
+            // Pause.
+            try {
+                Thread.sleep(tickPause);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            handleEntrance();
+            updateViews();
+            counter++;
+        }
+
+        private void advanceTime(){
+            // Advance the time by one minute.
+            minute++;
+            while (minute > 59) {
+                minute -= 60;
+                hour++;
+            }
+            while (hour > 23) {
+                hour -= 24;
+                day++;
+            }
+            while (day > 6) {
+
+                day -= 7;
+
+            }
+
+        }
+
+        private void handleEntrance(){
+            carsArriving();
+            carsEntering(entrancePassQueue);
+            carsEntering(entranceCarQueue);
+        }
+
+        private void handleExit(){
+            carsReadyToLeave();
+            carsPaying();
+            carsLeaving();
+        }
+
+        private void updateViews(){
+            changeLocation();
+            // Update the views.
+            notifyViews();
+        }
+
+    }
+    Thread ticks=new Thread(new TickThread());
 
 
     //can only be run in via simulator.java, otherwize screen freezes
 
     public void runEndless() {
-        for (int i = 0; i < 10000; i++) {
-            tick();
 
-
-        }
     }
     //self made one step
     public void oneStep(){
-        tick();
+        if(!ticks.isAlive()) {
+            hundredEnabled=false;
+            ticks.start();
+        }
 
 
 
@@ -222,69 +316,15 @@ public class Model extends AbstractModel {
     }
     //selfmade hundred steps
     public void hundredSteps(){
-
-        for (int i = 0; i < 100; i++) {
-            tick();
-
+        if(!ticks.isAlive()) {
+            hundredEnabled=true;
+            ticks.start();
         }
+
 
     }
 
 
-    private void tick() {
-        if(counter == 1440){
-            counter = 0;
-        }
-        advanceTime();
-        handleExit();
-        updateViews();
-
-        // Pause.
-        try {
-            Thread.sleep(tickPause);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        handleEntrance();
-        counter++;
-    }
-
-    private void advanceTime(){
-        // Advance the time by one minute.
-        minute++;
-        while (minute > 59) {
-            minute -= 60;
-            hour++;
-        }
-        while (hour > 23) {
-            hour -= 24;
-            day++;
-        }
-        while (day > 6) {
-
-            day -= 7;
-
-        }
-
-    }
-
-    private void handleEntrance(){
-        carsArriving();
-        carsEntering(entrancePassQueue);
-        carsEntering(entranceCarQueue);
-    }
-
-    private void handleExit(){
-        carsReadyToLeave();
-        carsPaying();
-        carsLeaving();
-    }
-
-    private void updateViews(){
-        changeLocation();
-        // Update the views.
-        notifyViews();
-    }
 
     private void carsArriving(){
         int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
