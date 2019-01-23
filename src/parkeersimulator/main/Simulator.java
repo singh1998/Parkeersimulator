@@ -36,7 +36,7 @@ public class Simulator extends JFrame {
         Container contentPane = getContentPane();
         main.add(timeView);
         main.add(carParkView);
-        JPanel ondervlak = new JPanel();
+        ondervlak = new JPanel();
         main.add(ondervlak);
 
         ondervlak.add(carTypeView);
