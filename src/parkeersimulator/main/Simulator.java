@@ -21,7 +21,9 @@ public class Simulator extends JFrame {
 
     public Simulator(){
         this.setTitle("parkeersimulator");
-        model=new Model(3,6,30);
+        model=new Model(3,4,42);
+        //504 places lays closest to 500. 500 precisely can not be done with 3 floors
+        //previously, it was 540 total: 3 floors, 6 rows, 30 places
 
         carParkView = new CarParkView(model);
         quequeView=new QueueView(model);
