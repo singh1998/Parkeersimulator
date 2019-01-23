@@ -2,10 +2,7 @@ package parkeersimulator.main;
 
 import parkeersimulator.controller.Controller;
 import parkeersimulator.model.Model;
-import parkeersimulator.view.CarParkView;
-import parkeersimulator.view.CarTypeView;
-import parkeersimulator.view.QueueView;
-import parkeersimulator.view.RevenueView;
+import parkeersimulator.view.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +14,7 @@ public class Simulator extends JFrame {
     private CarParkView carParkView;
     private QueueView quequeView;
     private CarTypeView carTypeView;
+    private TimeView timeView;
     private JPanel main;
     private JPanel ondervlak;
     private RevenueView revenueView;
@@ -28,11 +26,13 @@ public class Simulator extends JFrame {
         carParkView = new CarParkView(model);
         quequeView=new QueueView(model);
         carTypeView=new CarTypeView(model);
+        timeView=new TimeView(model);
         controller=new Controller(model);
         main=new JPanel();
         revenueView = new RevenueView(model);
 
         Container contentPane = getContentPane();
+        main.add(timeView);
         main.add(carParkView);
         JPanel ondervlak = new JPanel();
         main.add(ondervlak);
