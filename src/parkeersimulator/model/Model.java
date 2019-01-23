@@ -30,6 +30,7 @@ public class Model extends AbstractModel {
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
+    String dagen[]={"maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"};
 
     private int tickPause = 100;
 
@@ -41,6 +42,7 @@ public class Model extends AbstractModel {
     int enterSpeed = 3; // number of cars that can enter per minute
     int paymentSpeed = 7; // number of cars that can pay per minute
     int exitSpeed = 5; // number of cars that can leave per minute
+
 
     double pricePerHour = 2; // hourly price per car
     double pricePerMinute = 0.03; // price per minute per car
@@ -259,7 +261,9 @@ public class Model extends AbstractModel {
             day++;
         }
         while (day > 6) {
+
             day -= 7;
+
         }
 
     }
@@ -417,7 +421,11 @@ public class Model extends AbstractModel {
     public int getHours(){
         return hour;
     }
-    //selfmade-get the amount of days that have been passed
+    //selfmade-get the day of the week
+    public String getDay(){
+        return dagen[day];
+    }
+    //selfmade-get the amount of days that have been passed in a week
     public int getDays(){
         return day;
     }

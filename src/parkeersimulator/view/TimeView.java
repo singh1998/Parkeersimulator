@@ -25,8 +25,8 @@ public class TimeView extends AbstractView {
         timeInfo=new JLabel();
         setLayout(new GridLayout(1,4));
         add(timeInfo);
-        add(minute);
         add(hour);
+        add(minute);
         add(day);
         add(step);
         step.setBorder(new EmptyBorder(5,0,0,0));
@@ -39,11 +39,12 @@ public class TimeView extends AbstractView {
     @Override
     public void updateView() {
         steps = model.getMinutes() + (model.getHours() * 60) + (model.getDays() * 1440);
-            timeInfo.setText("Time:");
-            step.setText("Steps: " + steps);
-            minute.setText("Minutes: "+model.getMinutes());
-            hour.setText("Hours: "+model.getHours());
-            day.setText("Days: "+model.getDays());
+            timeInfo.setText("Tijd:");
+            step.setText("Stappen: " + steps);
+             hour.setText("Uren: "+model.getHours());
+            minute.setText("Minuten: "+model.getMinutes());
+
+            day.setText("Dag: "+model.getDay());
 
             repaint();
         }
