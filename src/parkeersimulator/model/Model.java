@@ -12,6 +12,7 @@ public class Model extends AbstractModel {
     private int numberOfRows;
     private int numberOfPlaces;
     private int numberOfOpenSpots;
+    private int steps;
     private Car[][][] cars;
     //selfmade check if hundred steps button is pressed
     private boolean hundredEnabled;
@@ -20,7 +21,7 @@ public class Model extends AbstractModel {
     private static final String PASS = "2";
 
     //selfmade for amounts in parking garage
-    private ArrayList<Car> paydCars;
+    private ArrayList<Car> paidCars;
     private ArrayList<Car> subscribedCars;
 
     private CarQueue entranceCarQueue;
@@ -46,15 +47,15 @@ public class Model extends AbstractModel {
     int exitSpeed = 5; // number of cars that can leave per minute
 
 
-    double pricePerHour = 2; // hourly price per car
-    double pricePerMinute = 0.03; // price per minute per car
-    double dailyRevenue = 0; // revenue earned per day
 
-    int counter = 0; // number that displays the number of ticks
+    double pricePerHour = 2.00; // price per minute per car
+    double previousDailyRevenue = 0; // revenue earned per day
+    double actualDailyRevenue=0;
+    double ExpectedRevenue=0;
 
     public Model(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         //self added for amount in parking garage
-        paydCars=new ArrayList<>();
+        paidCars=new ArrayList<>();
         subscribedCars=new ArrayList<>();
 
         this.numberOfFloors = numberOfFloors;
@@ -123,7 +124,7 @@ public class Model extends AbstractModel {
             subscribedCars.remove(car);
         }
         if(car instanceof AdHocCar){
-            paydCars.remove(car);
+            paidCars.remove(car);
         }
         numberOfOpenSpots++;
 
@@ -209,31 +210,40 @@ public class Model extends AbstractModel {
             ticks=new Thread(new TickThread());
         }
         private void tick() {
-            if(counter == 1440){
-                counter = 0;
-            }
+
             advanceTime();
             handleExit();
-            // Pause.
+            /* Pause.
             try {
                 Thread.sleep(tickPause);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            */
             handleEntrance();
+            updateRevenues();
             updateViews();
-            counter++;
+
         }
         private void advanceTime(){
             // Advance the time by one minute.
+
+
+
             minute++;
+            steps=getMinutes() + (getHours() * 60) + (getDays() * 1440);
             while (minute > 59) {
                 minute -= 60;
                 hour++;
+
             }
             while (hour > 23) {
                 hour -= 24;
+
                 day++;
+
+
+
             }
             while (day > 6) {
 
@@ -293,7 +303,7 @@ public class Model extends AbstractModel {
                 freeLocation = getFirstFreePassLocation();
 
             } else {
-                paydCars.add(car);
+                paidCars.add(car);
                 freeLocation = getFirstFreeLocation();
             }
             setCarAt(freeLocation, car);
@@ -320,7 +330,7 @@ public class Model extends AbstractModel {
         int i=0;
         while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
             Car car = paymentCarQueue.removeCar();
-            dailyRevenue += calculatePrice(); //(!)In de parameter moet nog het aantal minuten/uren worden neergezet dat een auto staat(!)
+            calculatePrice(car);
             carLeavesSpot(car);
             i++;
         }
@@ -386,9 +396,9 @@ public class Model extends AbstractModel {
     public int getPayingCars(){
        return paymentCarQueue.carsInQueue();
     }
-    //selfmade-get the amount of payd cars in the parking garage
-    public int getAmountPaydCars(){
-        return paydCars.size();
+    //selfmade-get the amount of paid cars in the parking garage
+    public int getAmountPaidCars(){
+        return paidCars.size();
     }
 
     //selfmade-get the amount of subscribed cars in the parking garage
@@ -411,23 +421,45 @@ public class Model extends AbstractModel {
     public int getDays(){
         return day;
     }
-    //selfmade-Calculates the price per hour or per minute the user needs to pay
-    public double calculatePrice()
-    {
-        double price = 0;
-        if(hour > 0){
-            price = pricePerHour * hour;
-            return price;
-        }
-        if(minute > 0 && hour < 0){
-            price = pricePerHour*(minute/60);
-            return price;
-        }
-        return price;
+    //selfmade get amount of steps in simulation
+    public int getSteps(){
+        return steps;
     }
-    //selfmade-Get the actual daily revenue
+    //selfmade-Calculates the price per customer that pays and ads it to the  actual revenue of the current day
+    public void calculatePrice(Car car)
+    {
+       actualDailyRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour;
+    }
+    //selfmade-Calculates the excpected price per customer that is in the garage and has not paid yet
+    public void calculateExpectedRevenue(Car car){
+        ExpectedRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour;
+    }
+
+    //selfmade- return the revenue that is expected to be earned, from the customers that are still parked
+    public double getExpectedRevenue(){
+        ExpectedRevenue=0;
+        for(Car car: paidCars){
+            calculateExpectedRevenue(car);
+        }
+        return ExpectedRevenue;
+
+
+    }
+
+    //selfmade-Get the  daily revenue of the previous day
     public double getDailyRevenue()
     {
-        return dailyRevenue;
+        return previousDailyRevenue;
     }
+    public double getActualDailyRevenue(){
+        return actualDailyRevenue;
+    }
+    //selfmade-assign actual daily revenue of previous day to previousDailyRevenu and reset actual daily revenue
+    public void updateRevenues(){
+        if(getHours()==0 && getMinutes()==0) {
+            previousDailyRevenue = actualDailyRevenue;
+            actualDailyRevenue = 0;
+        }
+    }
+
 }

@@ -38,9 +38,9 @@ public class TimeView extends AbstractView {
     }
     @Override
     public void updateView() {
-        steps = model.getMinutes() + (model.getHours() * 60) + (model.getDays() * 1440);
+
             timeInfo.setText("Tijd:");
-            step.setText("Stappen: " + steps);
+            step.setText("Stappen: " + model.getSteps());
              hour.setText("Uren: "+model.getHours());
             minute.setText("Minuten: "+model.getMinutes());
 

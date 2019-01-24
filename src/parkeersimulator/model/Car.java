@@ -1,19 +1,22 @@
 package parkeersimulator.model;
 
 import java.awt.*;
+import java.util.Random;
 
 public abstract class Car {
-
     private Location location;
     private int minutesLeft;
     private boolean isPaying;
     private boolean hasToPay;
+    Random random = new Random();
+    protected int stayMinutes;
+
     
     /**
      * Constructor for objects of class Car
      */
     public Car() {
-
+    stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
     }
 
     public Location getLocation() {
@@ -51,6 +54,7 @@ public abstract class Car {
     public void tick() {
         minutesLeft--;
     }
+    public int getStayMinutes(){ return stayMinutes; };
     
     public abstract Color getColor();
 }

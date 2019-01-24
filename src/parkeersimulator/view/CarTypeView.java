@@ -9,7 +9,7 @@ import java.awt.*;
 public class CarTypeView extends AbstractView {
    private JLabel red;
    private JLabel blue;
-   private JLabel payd;
+   private JLabel paid;
    private JLabel subscribed;
    private JLabel spots;
 
@@ -20,7 +20,7 @@ public class CarTypeView extends AbstractView {
         blue=new JLabel();
 
 
-        payd=new JLabel();
+        paid=new JLabel();
         subscribed=new JLabel();
 
 
@@ -28,7 +28,7 @@ public class CarTypeView extends AbstractView {
 
         setLayout(new GridLayout(3,3));
         add(red);
-        add(payd);
+        add(paid);
         add(new JLabel());
         add(blue);
         add(subscribed);
@@ -45,7 +45,7 @@ public class CarTypeView extends AbstractView {
         red.setOpaque(true);
 
         spots.setBorder(new EmptyBorder(0,20,0,0));
-        payd.setBorder(new EmptyBorder(0,20,0,0));
+        paid.setBorder(new EmptyBorder(0,20,0,0));
         subscribed.setBorder(new EmptyBorder(0,20,0,0));
 
 
@@ -54,7 +54,7 @@ public class CarTypeView extends AbstractView {
 
     @Override
     public void updateView() {
-        payd.setText("Reguliere klanten: "+model.getAmountPaydCars());
+        paid.setText("Reguliere klanten: "+model.getAmountPaidCars());
         subscribed.setText("Klanten met abonnement: "+model.getAmountSubscribedCars()+"");
         spots.setText("Plekken vrij: "+model.getNumberOfOpenSpots());
         repaint();
