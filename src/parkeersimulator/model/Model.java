@@ -109,6 +109,8 @@ public class Model extends AbstractModel {
 
     public void incrementDay(){ day++; }
 
+    public int getTotalSpots(){ return numberOfFloors*numberOfPlaces*numberOfRows; }
+
 
     public Car getCarAt(Location location) {
         if (!locationIsValid(location)) {
