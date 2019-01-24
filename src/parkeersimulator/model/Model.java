@@ -121,20 +121,14 @@ public class Model extends AbstractModel {
         //selfplaced - remove a car from the the countinglists that count the amount of cars in the parking garage
         if(car instanceof ParkingPassCar ){
             subscribedCars.remove(car);
-
         }
         if(car instanceof AdHocCar){
             paydCars.remove(car);
         }
-
-
-
-
         numberOfOpenSpots++;
 
         return car;
     }
-
     public Location getFirstFreeLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -162,7 +156,7 @@ public class Model extends AbstractModel {
         }
         return null;
     }
-
+//cannot refactor duplicate code because of missing return statement error, if you return null, there will be an error
     public Car getFirstLeavingCar() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -202,50 +196,24 @@ public class Model extends AbstractModel {
         return true;
     }
 
-
     public class TickThread implements Runnable{
         @Override
         public void run() {
             if(hundredEnabled){
-                hundredSteps();
+                for (int i = 0; i < 100; i++) {
+                    tick();
+                }
             } else {
-                oneStep();
+                tick();
             }
             ticks=new Thread(new TickThread());
         }
-        public void runEndless() {
-            for (int i = 0; i < 10000; i++) {
-                tick();
-
-
-            }
-        }
-        //self made one step
-        public void oneStep(){
-            tick();
-
-
-
-        }
-        //selfmade hundred steps
-        public void hundredSteps(){
-
-            for (int i = 0; i < 100; i++) {
-                tick();
-
-            }
-
-        }
-
-
         private void tick() {
             if(counter == 1440){
                 counter = 0;
             }
             advanceTime();
             handleExit();
-
-
             // Pause.
             try {
                 Thread.sleep(tickPause);
@@ -256,7 +224,6 @@ public class Model extends AbstractModel {
             updateViews();
             counter++;
         }
-
         private void advanceTime(){
             // Advance the time by one minute.
             minute++;
@@ -271,23 +238,18 @@ public class Model extends AbstractModel {
             while (day > 6) {
 
                 day -= 7;
-
             }
-
         }
-
         private void handleEntrance(){
             carsArriving();
             carsEntering(entrancePassQueue);
             carsEntering(entranceCarQueue);
         }
-
         private void handleExit(){
             carsReadyToLeave();
             carsPaying();
             carsLeaving();
         }
-
         private void updateViews(){
             changeLocation();
             // Update the views.
@@ -296,23 +258,12 @@ public class Model extends AbstractModel {
 
     }
     Thread ticks=new Thread(new TickThread());
-
-
-    //can only be run in via simulator.java, otherwize screen freezes
-
-    public void runEndless() {
-
-    }
     //self made one step
     public void oneStep(){
         if(!ticks.isAlive()) {
             hundredEnabled=false;
             ticks.start();
         }
-
-
-
-
     }
     //selfmade hundred steps
     public void hundredSteps(){
@@ -320,19 +271,13 @@ public class Model extends AbstractModel {
             hundredEnabled=true;
             ticks.start();
         }
-
-
     }
-
-
-
     private void carsArriving(){
         int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
         addArrivingCars(numberOfCars, AD_HOC);
         numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
         addArrivingCars(numberOfCars, PASS);
     }
-
     private void carsEntering(CarQueue queue){
         int i=0;
         // Remove car from the front of the queue and assign to a parking space.
@@ -355,7 +300,6 @@ public class Model extends AbstractModel {
             i++;
         }
     }
-
     private void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
         Car car = getFirstLeavingCar();
@@ -404,7 +348,6 @@ public class Model extends AbstractModel {
         double numberOfCarsPerHour = averageNumberOfCarsPerHour + random.nextGaussian() * standardDeviation;
         return (int)Math.round(numberOfCarsPerHour / 60);
     }
-
     private void addArrivingCars(int numberOfCars, String type){
         // Add the cars to the back of the queue.
         switch(type) {
@@ -420,7 +363,6 @@ public class Model extends AbstractModel {
                 break;
         }
     }
-
     private void carLeavesSpot(Car car){
         removeCarAt(car.getLocation());
         exitCarQueue.addCar(car);
@@ -482,9 +424,7 @@ public class Model extends AbstractModel {
             return price;
         }
         return price;
-
     }
-
     //selfmade-Get the actual daily revenue
     public double getDailyRevenue()
     {
