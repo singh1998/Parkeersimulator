@@ -6,8 +6,8 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Model extends AbstractModel {
 
+public class Model extends AbstractModel {
     private int numberOfFloors;
     private int numberOfRows;
     private int numberOfPlaces;
@@ -28,32 +28,33 @@ public class Model extends AbstractModel {
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
-
+    private Thread ticks;
 
     private int day = 0;
     private int hour = 0;
     private int minute = 0;
-    String dagen[]={"maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"};
+    private String dagen[]={"maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"};
 
     private int tickPause = 100;
 
-    int weekDayArrivals= 100; // average number of arriving cars per hour
-    int weekendArrivals = 200; // average number of arriving cars per hour
-    int weekDayPassArrivals= 50; // average number of arriving cars per hour
-    int weekendPassArrivals = 5; // average number of arriving cars per hour
+    private int weekDayArrivals= 100; // average number of arriving cars per hour
+    private int weekendArrivals = 200; // average number of arriving cars per hour
+    private  int weekDayPassArrivals= 50; // average number of arriving cars per hour
+    private int weekendPassArrivals = 5; // average number of arriving cars per hour
 
-    int enterSpeed = 3; // number of cars that can enter per minute
-    int paymentSpeed = 7; // number of cars that can pay per minute
-    int exitSpeed = 5; // number of cars that can leave per minute
+    private int enterSpeed = 3; // number of cars that can enter per minute
+    private int paymentSpeed = 7; // number of cars that can pay per minute
+    private int exitSpeed = 5; // number of cars that can leave per minute
 
 
 
-    double pricePerHour = 2.00; // price per minute per car
-    double previousDailyRevenue = 0; // revenue earned per day
-    double actualDailyRevenue=0;
-    double ExpectedRevenue=0;
+    private double pricePerHour = 2.00; // price per minute per car
+    private double previousDailyRevenue = 0; // revenue earned per day
+    private double actualDailyRevenue=0;
+    private double ExpectedRevenue=0;
 
     public Model(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
+        ticks=new Thread(new TickThread(this));
         //self added for amount in parking garage
         paidCars=new ArrayList<>();
         subscribedCars=new ArrayList<>();
@@ -67,9 +68,8 @@ public class Model extends AbstractModel {
         entrancePassQueue = new CarQueue();
         paymentCarQueue = new CarQueue();
         exitCarQueue = new CarQueue();
-
     }
-    //
+
     public int getNumberOfFloors() {
         return numberOfFloors;
     }
@@ -85,6 +85,32 @@ public class Model extends AbstractModel {
     public int getNumberOfOpenSpots(){
         return numberOfOpenSpots;
     }
+
+
+    public void createNewTicksThread(){ ticks=new Thread(new TickThread(this)); }
+
+    public boolean isHundredEnabled(){ return hundredEnabled; }
+
+    public void setSteps(){ steps=getMinutes() + (getHours() * 60) + (getDays() * 1440); }
+
+    public int getTickPause(){ return tickPause; }
+
+    public CarQueue getEntrancePassQueue(){ return entrancePassQueue; }
+
+    public CarQueue getEntranceCarQueue(){ return entranceCarQueue; }
+
+    public void resetDay( ){ day -= 7; }
+
+    public void resetMinute(){ minute-= 60; }
+
+    public void resetHour(){ hour -= 24; }
+
+    public void incrementHour(){ hour++; }
+
+    public void incrementMinute(){ minute++; }
+
+    public void incrementDay(){ day++; }
+
 
     public Car getCarAt(Location location) {
         if (!locationIsValid(location)) {
@@ -197,77 +223,6 @@ public class Model extends AbstractModel {
         return true;
     }
 
-    public class TickThread implements Runnable{
-        @Override
-        public void run() {
-            if(hundredEnabled){
-                for (int i = 0; i < 100; i++) {
-                    tick();
-                }
-            } else {
-                tick();
-            }
-            ticks=new Thread(new TickThread());
-        }
-        private void tick() {
-
-            advanceTime();
-            handleExit();
-            /* Pause.
-            try {
-                Thread.sleep(tickPause);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            */
-            handleEntrance();
-            updateRevenues();
-            updateViews();
-
-        }
-        private void advanceTime(){
-            // Advance the time by one minute.
-
-
-
-            minute++;
-            steps=getMinutes() + (getHours() * 60) + (getDays() * 1440);
-            while (minute > 59) {
-                minute -= 60;
-                hour++;
-
-            }
-            while (hour > 23) {
-                hour -= 24;
-
-                day++;
-
-
-
-            }
-            while (day > 6) {
-
-                day -= 7;
-            }
-        }
-        private void handleEntrance(){
-            carsArriving();
-            carsEntering(entrancePassQueue);
-            carsEntering(entranceCarQueue);
-        }
-        private void handleExit(){
-            carsReadyToLeave();
-            carsPaying();
-            carsLeaving();
-        }
-        private void updateViews(){
-            changeLocation();
-            // Update the views.
-            notifyViews();
-        }
-
-    }
-    Thread ticks=new Thread(new TickThread());
     //self made one step
     public void oneStep(){
         if(!ticks.isAlive()) {
@@ -282,13 +237,13 @@ public class Model extends AbstractModel {
             ticks.start();
         }
     }
-    private void carsArriving(){
+    public void carsArriving(){
         int numberOfCars=getNumberOfCars(weekDayArrivals, weekendArrivals);
         addArrivingCars(numberOfCars, AD_HOC);
         numberOfCars=getNumberOfCars(weekDayPassArrivals, weekendPassArrivals);
         addArrivingCars(numberOfCars, PASS);
     }
-    private void carsEntering(CarQueue queue){
+    public void carsEntering(CarQueue queue){
         int i=0;
         // Remove car from the front of the queue and assign to a parking space.
         while (queue.carsInQueue()>0 &&
@@ -310,7 +265,7 @@ public class Model extends AbstractModel {
             i++;
         }
     }
-    private void carsReadyToLeave(){
+    public void carsReadyToLeave(){
         // Add leaving cars to the payment queue.
         Car car = getFirstLeavingCar();
         while (car!=null) {
@@ -325,7 +280,7 @@ public class Model extends AbstractModel {
         }
     }
 
-    private void carsPaying(){
+    public void carsPaying(){
         // Let cars pay.
         int i=0;
         while (paymentCarQueue.carsInQueue()>0 && i < paymentSpeed){
@@ -336,7 +291,7 @@ public class Model extends AbstractModel {
         }
     }
 
-    private void carsLeaving(){
+    public void carsLeaving(){
         // Let cars leave.
         int i=0;
         while (exitCarQueue.carsInQueue()>0 && i < exitSpeed){
@@ -442,10 +397,7 @@ public class Model extends AbstractModel {
             calculateExpectedRevenue(car);
         }
         return ExpectedRevenue;
-
-
     }
-
     //selfmade-Get the  daily revenue of the previous day
     public double getDailyRevenue()
     {
