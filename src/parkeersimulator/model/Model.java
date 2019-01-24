@@ -35,7 +35,7 @@ public class Model extends AbstractModel {
     private int minute = 0;
     private String dagen[]={"maandag","dinsdag","woensdag","donderdag","vrijdag","zaterdag","zondag"};
 
-    private int tickPause = 100;
+
 
     private int weekDayArrivals= 100; // average number of arriving cars per hour
     private int weekendArrivals = 200; // average number of arriving cars per hour
@@ -92,8 +92,6 @@ public class Model extends AbstractModel {
     public boolean isHundredEnabled(){ return hundredEnabled; }
 
     public void setSteps(){ steps=getMinutes() + (getHours() * 60) + (getDays() * 1440); }
-
-    public int getTickPause(){ return tickPause; }
 
     public CarQueue getEntrancePassQueue(){ return entrancePassQueue; }
 
