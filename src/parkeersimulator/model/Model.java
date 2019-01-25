@@ -16,6 +16,8 @@ public class Model extends AbstractModel {
     private Car[][][] cars;
     //selfmade check if hundred steps button is pressed
     private boolean hundredEnabled;
+    private boolean dayTickEnabled;
+    private boolean hourEnabled;
 
     private static final String AD_HOC = "1";
     private static final String PASS = "2";
@@ -70,22 +72,13 @@ public class Model extends AbstractModel {
         exitCarQueue = new CarQueue();
     }
 
-    public int getNumberOfFloors() {
-        return numberOfFloors;
-    }
+    public int getNumberOfFloors() { return numberOfFloors; }
 
-    public int getNumberOfRows() {
-        return numberOfRows;
-    }
+    public int getNumberOfRows() { return numberOfRows; }
 
-    public int getNumberOfPlaces() {
-        return numberOfPlaces;
-    }
+    public int getNumberOfPlaces() { return numberOfPlaces; }
 
-    public int getNumberOfOpenSpots(){
-        return numberOfOpenSpots;
-    }
-
+    public int getNumberOfOpenSpots(){ return numberOfOpenSpots; }
 
     public void createNewTicksThread(){ ticks=new Thread(new TickThread(this)); }
 
@@ -108,6 +101,10 @@ public class Model extends AbstractModel {
     public void incrementMinute(){ minute++; }
 
     public void incrementDay(){ day++; }
+
+    public boolean isDayTickEnabledEnabled(){return dayTickEnabled;}
+
+    public boolean isHourEnabled(){return hourEnabled;}
 
     public int getTotalSpots(){ return numberOfFloors*numberOfPlaces*numberOfRows; }
 
@@ -223,18 +220,42 @@ public class Model extends AbstractModel {
         return true;
     }
 
-    //self made one step
+    //self made one step (is one minute)
     public void oneStep(){
         if(!ticks.isAlive()) {
+            dayTickEnabled=false;
             hundredEnabled=false;
+            hourEnabled=false;
             ticks.start();
         }
     }
-    //selfmade hundred steps
+    //selfmade tick hundred steps
     public void hundredSteps(){
         if(!ticks.isAlive()) {
+            dayTickEnabled=false;
             hundredEnabled=true;
+            hourEnabled=false;
             ticks.start();
+        }
+    }
+    //selfmade- tick one day
+    public void oneDay(){
+        if(!ticks.isAlive()) {
+            hundredEnabled=false;
+            dayTickEnabled=true;
+            hourEnabled=false;
+            ticks.start();
+
+        }
+    }
+    //selfmade- tick one hour
+    public void oneHour(){
+        if(!ticks.isAlive()) {
+            hundredEnabled=false;
+            dayTickEnabled=false;
+            hourEnabled=true;
+            ticks.start();
+
         }
     }
     public void carsArriving(){
@@ -386,9 +407,7 @@ public class Model extends AbstractModel {
        actualDailyRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour;
     }
     //selfmade-Calculates the excpected price per customer that is in the garage and has not paid yet
-    public void calculateExpectedRevenue(Car car){
-        ExpectedRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour;
-    }
+    public void calculateExpectedRevenue(Car car){ ExpectedRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour; }
 
     //selfmade- return the revenue that is expected to be earned, from the customers that are still parked
     public double getExpectedRevenue(){
