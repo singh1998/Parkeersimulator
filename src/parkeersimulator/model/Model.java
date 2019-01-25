@@ -25,8 +25,15 @@ public class Model extends AbstractModel {
     //selfmade for amounts in parking garage
     private ArrayList<Car> paidCars;
     private ArrayList<Car> subscribedCars;
+    //selfmade lists for cars that think the entrancequeue is too long and go away
+    private ArrayList<Car> paidIgnoringCars;
+    private ArrayList<Car> passIgnoringCars;
+
+    private int previousTotalIgnoring;//the total cars that drove away because the queue's were too long of the previous day
 
     private CarQueue entranceCarQueue;
+    private int entranceCarQueueLimit=9;
+    private int entrancePassQueueLimit=9;
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
@@ -60,6 +67,8 @@ public class Model extends AbstractModel {
         //self added for amount in parking garage
         paidCars=new ArrayList<>();
         subscribedCars=new ArrayList<>();
+        paidIgnoringCars=new ArrayList<>();
+        passIgnoringCars=new ArrayList<>();
 
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
@@ -108,6 +117,13 @@ public class Model extends AbstractModel {
 
     public int getTotalSpots(){ return numberOfFloors*numberOfPlaces*numberOfRows; }
 
+    public void resetIgnoreQueue(){
+        paidIgnoringCars.clear();
+        passIgnoringCars.clear();
+    }
+    public int getPreviousTotalIgnoring(){
+        return previousTotalIgnoring;
+    }
 
     public Car getCarAt(Location location) {
         if (!locationIsValid(location)) {
@@ -339,12 +355,20 @@ public class Model extends AbstractModel {
         switch(type) {
             case AD_HOC:
                 for (int i = 0; i < numberOfCars; i++) {
-                    entranceCarQueue.addCar(new AdHocCar());
+                    if(entranceCarQueue.carsInQueue()<entranceCarQueueLimit) {
+                        entranceCarQueue.addCar(new AdHocCar());
+                    } else {
+                        paidIgnoringCars.add(new AdHocCar() );
+                    }
                 }
                 break;
             case PASS:
                 for (int i = 0; i < numberOfCars; i++) {
-                    entrancePassQueue.addCar(new ParkingPassCar());
+                    if(entrancePassQueue.carsInQueue()<entrancePassQueueLimit) {
+                        entrancePassQueue.addCar(new ParkingPassCar());
+                    } else {
+                        passIgnoringCars.add(new ParkingPassCar());
+                    }
                 }
                 break;
         }
@@ -361,7 +385,6 @@ public class Model extends AbstractModel {
     public int getSubscribtionArrivingCars(){
         return  entrancePassQueue.carsInQueue();
     }
-
 
     //selfmade-get the number of cars that are in the exitqueue
     public int getLeavingCars(){
@@ -408,7 +431,13 @@ public class Model extends AbstractModel {
     }
     //selfmade-Calculates the excpected price per customer that is in the garage and has not paid yet
     public void calculateExpectedRevenue(Car car){ ExpectedRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour; }
-
+    //selfmade
+    public int getPaidQueueIgnorers(){
+        return paidIgnoringCars.size();
+    }
+    public int getPassQueueIgnorers(){
+        return passIgnoringCars.size();
+    }
     //selfmade- return the revenue that is expected to be earned, from the customers that are still parked
     public double getExpectedRevenue(){
         ExpectedRevenue=0;
@@ -426,10 +455,12 @@ public class Model extends AbstractModel {
         return actualDailyRevenue;
     }
     //selfmade-assign actual daily revenue of previous day to previousDailyRevenu and reset actual daily revenue
-    public void updateRevenues(){
+    public void updateRevenuesAndResetIgnoreQueue(){
         if(getHours()==0 && getMinutes()==0) {
             previousDailyRevenue = actualDailyRevenue;
             actualDailyRevenue = 0;
+            previousTotalIgnoring=paidIgnoringCars.size()+passIgnoringCars.size();
+            resetIgnoreQueue();
         }
     }
 

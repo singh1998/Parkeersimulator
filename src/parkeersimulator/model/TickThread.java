@@ -55,7 +55,7 @@ public class TickThread implements Runnable{
         }
         //
         handleEntrance();
-        model.updateRevenues();
+        model.updateRevenuesAndResetIgnoreQueue();
         updateViews();
 
     }
