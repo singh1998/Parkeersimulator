@@ -32,8 +32,7 @@ public class Model extends AbstractModel {
     private int previousTotalIgnoring;//the total cars that drove away because the queue's were too long of the previous day
 
     private CarQueue entranceCarQueue;
-    private int entranceCarQueueLimit=9;
-    private int entrancePassQueueLimit=9;
+    private int queueLimit=15;
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
@@ -51,9 +50,9 @@ public class Model extends AbstractModel {
     private  int weekDayPassArrivals= 50; // average number of arriving cars per hour
     private int weekendPassArrivals = 5; // average number of arriving cars per hour
 
-    private int enterSpeed = 3; // number of cars that can enter per minute
-    private int paymentSpeed = 7; // number of cars that can pay per minute
-    private int exitSpeed = 5; // number of cars that can leave per minute
+    private int enterSpeed = 6; // number of cars that can enter per minute
+    private int paymentSpeed = 2; // number of cars that can pay per minute
+    private int exitSpeed = 3; // number of cars that can leave per minute
 
 
 
@@ -341,7 +340,7 @@ public class Model extends AbstractModel {
         Random random = new Random();
 
         // Get the average number of cars that arrive per hour.
-        int averageNumberOfCarsPerHour = day < 5
+        int averageNumberOfCarsPerHour = day < 3
                 ? weekDay
                 : weekend;
 
@@ -355,7 +354,7 @@ public class Model extends AbstractModel {
         switch(type) {
             case AD_HOC:
                 for (int i = 0; i < numberOfCars; i++) {
-                    if(entranceCarQueue.carsInQueue()<entranceCarQueueLimit) {
+                    if(entranceCarQueue.carsInQueue()<=queueLimit) {
                         entranceCarQueue.addCar(new AdHocCar());
                     } else {
                         paidIgnoringCars.add(new AdHocCar() );
@@ -364,7 +363,7 @@ public class Model extends AbstractModel {
                 break;
             case PASS:
                 for (int i = 0; i < numberOfCars; i++) {
-                    if(entrancePassQueue.carsInQueue()<entrancePassQueueLimit) {
+                    if(entrancePassQueue.carsInQueue()<queueLimit) {
                         entrancePassQueue.addCar(new ParkingPassCar());
                     } else {
                         passIgnoringCars.add(new ParkingPassCar());
