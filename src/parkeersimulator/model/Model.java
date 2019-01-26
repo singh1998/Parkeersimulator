@@ -340,9 +340,32 @@ public class Model extends AbstractModel {
         Random random = new Random();
 
         // Get the average number of cars that arrive per hour.
-        int averageNumberOfCarsPerHour = day < 3
-                ? weekDay
-                : weekend;
+        int averageNumberOfCarsPerHour;
+        //weekday
+        if(day<5){
+            //thursday is bargainnight(koopavond), in groningen from 18.00 to 21.00 selfmade
+            if(day==3) {
+                if(hour==18 || hour==19 || hour==20 || hour==21){
+                    averageNumberOfCarsPerHour =200;
+                } else {
+                    averageNumberOfCarsPerHour = weekDay;
+                }
+
+            } else {
+                averageNumberOfCarsPerHour = weekDay;
+            }
+            //weekend
+        } else {
+            //more becauseoftheater shows-other theaters(oosterpoort=example) have 2 shows per day
+            // Whole theater can hold 1000. Theter is fully booked according to case
+            //most of the time around 8 (oosterpoort)
+
+            if(hour==20){
+                averageNumberOfCarsPerHour=weekend+1000;
+            } else {
+                averageNumberOfCarsPerHour = weekend;
+            }
+        }
 
         // Calculate the number of cars that arrive this minute.
         double standardDeviation = averageNumberOfCarsPerHour * 0.3;
