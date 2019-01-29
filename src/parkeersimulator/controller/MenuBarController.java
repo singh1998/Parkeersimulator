@@ -39,6 +39,18 @@ public class MenuBarController extends JMenuBar {
 
         JMenuItem doOneDay = new JMenuItem("Een dag verdergaan"); // Creates a MenuItem fot the menu(Bestand) called doOneDay
         doOneDay.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, SHORTCUT_MASK));
+        doOneDay.addActionListener(e -> model.oneDay()); // Adds an ActionListener to the MenuItem
+        doOneDay.setFont(new Font("Century Gothic",Font.PLAIN,11));
+        fileMenu.add(doOneDay);
+
+        JMenuItem quitItem = new JMenuItem("Sluiten"); // Creates a MenuItem for the menu(Bestand) called quitItem
+        quitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, SHORTCUT_MASK)); // Creates a hotkey so when CTRL+Q is pressed the method below will activate
+        quitItem.addActionListener(e -> model.quit()); // Adds an ActionListener to the MenuItem
+        quitItem.setFont(new Font("Century Gothic",Font.BOLD,11));
+        fileMenu.add(quitItem);
+
+
+
 
 
     }
