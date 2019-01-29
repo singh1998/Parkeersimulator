@@ -116,6 +116,14 @@ public class CarTypeView extends AbstractView {
         add(field9);
         add(field10);
 
+        // Adds a font to the JLabels
+        spots.setFont(new FontClass());
+        paid.setFont(new FontClass());
+        subscribed.setFont(new FontClass());
+        paidreserved.setFont(new FontClass());
+        reserved.setFont(new FontClass());
+        total.setFont(new FontClass());
+
         gray.setBackground(Color.gray); // Makes the JLabel grey
         gray.setOpaque(true);
         lightgray.setBackground(Color.lightGray); // Makes the JLabel light grey

@@ -25,11 +25,19 @@ public class QueueView extends AbstractView{
 
     public QueueView(Model model){
         super(model);
+
+
+
+
+
+
+
         queueInfo=new JLabel("Rij informatie");
         ignoreInfo=new JLabel("Aantal klanten dat vandaag verder reed omdat ze de ingangsrij te lang vonden");
-        Font font=new Font(queueInfo.getFont().getName(),Font.BOLD,20);
-        queueInfo.setFont(font);
-        ignoreInfo.setFont(font);
+
+
+
+
 
         nonSubcriptionCustomers=new JLabel();
         subscriptionCustomers=new JLabel();
@@ -42,6 +50,20 @@ public class QueueView extends AbstractView{
         ignoringTotal=new JLabel();
         previousIgnoringTotal=new JLabel();
 
+        // Adds a font to the JLabels
+        Font font = new Font("Century Gothic",Font.BOLD,35);
+        Font font2 = new Font("Century Gothic",Font.BOLD, 20);
+        queueInfo.setFont(font);
+        ignoreInfo.setFont(font2);
+        nonSubcriptionCustomers.setFont(new FontClass());
+        subscriptionCustomers.setFont(new FontClass());
+        payingCustomers.setFont(new FontClass());
+        leavingCustomers.setFont(new FontClass());
+        ignoringPaidCustomerAmount.setFont(new FontClass());
+        ignoringSubscribedCustomerAmount.setFont(new FontClass());
+        ignoringTotal.setFont(new FontClass());
+        previousIgnoringTotal.setFont(new FontClass());
+
         queueInfo.setForeground(new Color(201,201,201));
         ignoreInfo.setForeground(new Color(201,201,201));
         nonSubcriptionCustomers.setForeground(new Color(201,201,201));
@@ -52,6 +74,8 @@ public class QueueView extends AbstractView{
         ignoringSubscribedCustomerAmount.setForeground(new Color(201,201,201));
         ignoringTotal.setForeground(new Color(201,201,201));
         previousIgnoringTotal.setForeground(new Color(201,201,201));
+
+
 
         this.setLayout(new GridLayout(10,1));
         add(queueInfo);

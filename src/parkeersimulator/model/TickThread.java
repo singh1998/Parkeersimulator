@@ -33,11 +33,11 @@ public class TickThread implements Runnable{
             tick_1();
         }
     }
-    public void tick_100(){
+    private void tick_100(){
 
         tickSoMany(100,true);
     }
-    public void tickDay(){
+    private void tickDay(){
         tickSoMany(1440,false);
     }
     private void tick_1() {
@@ -59,7 +59,7 @@ public class TickThread implements Runnable{
         updateViews();
 
     }
-    public void tickHour(){
+    private void tickHour(){
         tickSoMany(60,false);
     }
     private void advanceTime(){

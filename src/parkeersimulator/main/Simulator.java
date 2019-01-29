@@ -22,6 +22,12 @@ public class Simulator extends JFrame {
     private RevenueView revenueView;
     private MenuBarController menuBar;
 
+    private NotificationView notificationView;
+
+
+
+
+
     public Simulator(){
         this.setBackground(new Color(43,43,43)); // Makes the background dark grey
         this.setTitle("parkeersimulator");
@@ -40,6 +46,9 @@ public class Simulator extends JFrame {
         setJMenuBar(menuBar);
 
         Container contentPane = getContentPane();
+
+        notificationView = new NotificationView(model);
+        contentPane.add(notificationView, BorderLayout.WEST);
 
         main.setLayout(new BorderLayout());
         main.add(timeView,BorderLayout.NORTH);

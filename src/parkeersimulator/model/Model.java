@@ -554,5 +554,50 @@ public class Model extends AbstractModel {
     {
         System.exit(0);
     }
+    public String revenueMessage()
+    {
+        if(actualDailyRevenue >= 1000 && actualDailyRevenue < 2000)
+        {
+            return "€1.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 2000 && actualDailyRevenue < 3000)
+        {
+            return "€2.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 3000 && actualDailyRevenue < 4000)
+        {
+            return "€3.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 4000 && actualDailyRevenue < 5000)
+        {
+            return "€4.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 5000 && actualDailyRevenue < 6000)
+        {
+            return "€5.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 6000 && actualDailyRevenue < 7000)
+        {
+            return "€6.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 7000 && actualDailyRevenue < 8000)
+        {
+            return "€7.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 8000 && actualDailyRevenue < 9000)
+        {
+            return "€8.000 bereikt";
+        }
+        return "";
+    }
+
+    public String endDayMessage()
+    {
+        if (hour == 0 && minute == 0 && getSteps() != 0) {
+            return "Dag voorbij";
+        }
+        return "";
+    }
+
 
 }

@@ -38,6 +38,12 @@ public class TimeView extends AbstractView {
         timeInfo.setForeground(new Color(201,201,201)); // Makes the color(with RGB-values) of the text
         timeInfo.setBackground(new Color(32,34,37)); // Makes the color(with RGB-values) of the background
         timeInfo.setOpaque(true);
+        step.setFont(new FontClass());
+        minute.setFont(new FontClass());
+        hour.setFont(new FontClass());
+        day.setFont(new FontClass());
+        timeInfo.setFont(new FontClass());
+
 
         setLayout(new GridLayout(1,4)); // Gives this view a GridLayout with 1 row and 4 columns
         // Adds the JLabels to the GridLayout

@@ -20,18 +20,24 @@ public class Controller extends AbstractController {
         Border raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 
         button = new JButton("One minute");
+        button.setFont(new Font("Century Gothic",Font.BOLD,11));
+
+
         button.addActionListener(e->model.oneStep());
         this.add(button);
 
         button2 = new JButton("Hundred minutes");
         button2.addActionListener(e-> model.hundredSteps());
+        button2.setFont(new Font("Century Gothic",Font.BOLD,11));
         this.add(button2);
 
         button3 = new JButton("One hour");
+        button3.setFont(new Font("Century Gothic",Font.BOLD,11));
         button3.addActionListener(e-> model.oneHour());
         this.add(button3);
 
         button4 = new JButton("One day");
+        button4.setFont(new Font("Century Gothic",Font.BOLD,11));
         button4.addActionListener(e-> model.oneDay());
         this.add(button4);
 

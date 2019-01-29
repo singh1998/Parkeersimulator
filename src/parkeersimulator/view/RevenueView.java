@@ -24,7 +24,7 @@ public class RevenueView extends AbstractView{
         expectedRevenueString.setForeground(new Color(255,191,0));
         expectedRevenue.setForeground(new Color(255,191,0));
 
-        Font font=new Font(dailyRevenue.getFont().getName(),Font.BOLD,20); // Zorg voor een mooier font B.S.
+        Font font=new Font("Century Gothic",Font.PLAIN,20);; // Zorg voor een mooier font B.S.
         dailyRevenue.setFont(font);
         actualRevenue.setFont(font);
         expectedRevenueString.setFont(font);
