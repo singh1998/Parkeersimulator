@@ -549,5 +549,10 @@ public class Model extends AbstractModel {
             resetIgnoreQueue();
         }
     }
+    //selfmade-Quits the simulation B.S.
+    public void quit()
+    {
+        System.exit(0);
+    }
 
 }

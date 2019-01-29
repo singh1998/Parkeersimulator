@@ -20,7 +20,7 @@ import java.awt.*;
          */
         public CarParkView(Model model ) {
             super(model);
-            setBorder(new EmptyBorder(30,30,30,30));
+
 
 
 
@@ -28,6 +28,7 @@ import java.awt.*;
 
             size = new Dimension(0, 0);
         }
+
 
 
         /**
@@ -68,7 +69,7 @@ import java.awt.*;
                     for(int place = 0; place < model.getNumberOfPlaces(); place++) {
                         Location location = new Location(floor, row, place);
                         Car car = model.getCarAt(location);
-                        Color color = car == null ? Color.white : car.getColor();
+                        Color color = car == null ? new Color(240,240,240) : car.getColor();
                         drawPlace(graphics, location, color);
                     }
                 }

@@ -1,10 +1,12 @@
 package parkeersimulator.main;
 
 import parkeersimulator.controller.Controller;
+import parkeersimulator.controller.MenuBarController;
 import parkeersimulator.model.Model;
 import parkeersimulator.view.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class Simulator extends JFrame {
@@ -18,8 +20,10 @@ public class Simulator extends JFrame {
     private JPanel main;
     private JPanel ondervlak;
     private RevenueView revenueView;
+    private MenuBarController menuBar;
 
     public Simulator(){
+        this.setBackground(new Color(43,43,43)); // Makes the background dark grey
         this.setTitle("parkeersimulator");
         model=new Model(3,4,42);
         //504 places lays closest to 500. 500 precisely can not be done with 3 floors
@@ -32,18 +36,25 @@ public class Simulator extends JFrame {
         controller=new Controller(model);
         main=new JPanel();
         revenueView = new RevenueView(model);
+        menuBar=new MenuBarController(model);
+        setJMenuBar(menuBar);
 
         Container contentPane = getContentPane();
-        main.add(timeView);
-        main.add(carParkView);
+
+        main.setLayout(new BorderLayout());
+        main.add(timeView,BorderLayout.NORTH);
+        main.add(carParkView,BorderLayout.CENTER);
         ondervlak = new JPanel();
-        main.add(ondervlak);
+
+        ondervlak.setBackground(new Color(49,51,53));
+        main.add(ondervlak,BorderLayout.SOUTH);
+
 
         ondervlak.add(carTypeView);
         ondervlak.add(controller);
         ondervlak.setLayout(new FlowLayout());
 
-        main.setLayout(new BoxLayout(main,BoxLayout.Y_AXIS));
+
 
         contentPane.add(main, BorderLayout.CENTER);
         contentPane.add(quequeView, BorderLayout.EAST);
@@ -54,9 +65,13 @@ public class Simulator extends JFrame {
 
         pack();
 
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
 
         model.notifyViews();
+
+
+
 
 
 

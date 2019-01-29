@@ -9,37 +9,42 @@ import java.awt.*;
 public class RevenueView extends AbstractView{
     private JLabel dailyRevenue;
     private JLabel actualRevenue;
-    private JLabel excpectedRevenueString;
-    private JLabel excpectedRevenue;
+    private JLabel expectedRevenueString;
+    private JLabel expectedRevenue;
 
     public RevenueView(Model model) {
         super(model);
-        dailyRevenue=new JLabel();
+       dailyRevenue=new JLabel();
         actualRevenue=new JLabel();
-        excpectedRevenueString=new JLabel();
-        excpectedRevenue=new JLabel();
+        expectedRevenueString=new JLabel();
+        expectedRevenue=new JLabel();
+        
+        dailyRevenue.setForeground(new Color(255,191,0));
+        actualRevenue.setForeground(new Color(255,191,0));
+        expectedRevenueString.setForeground(new Color(255,191,0));
+        expectedRevenue.setForeground(new Color(255,191,0));
 
-        Font font=new Font(dailyRevenue.getFont().getName(),Font.BOLD,15);
+        Font font=new Font(dailyRevenue.getFont().getName(),Font.BOLD,20); // Zorg voor een mooier font B.S.
         dailyRevenue.setFont(font);
         actualRevenue.setFont(font);
-        excpectedRevenueString.setFont(font);
-        excpectedRevenue.setFont(font);
+        expectedRevenueString.setFont(font);
+        expectedRevenue.setFont(font);
         this.setLayout(new GridLayout(2,3));
         add(actualRevenue);
-        add(excpectedRevenueString);
+        add(expectedRevenueString);
         add(dailyRevenue);
         add(new JLabel());
-        add(excpectedRevenue);
+        add(expectedRevenue);
         add(new JLabel());
         this.setBorder(new EmptyBorder(30,30,30,30));
-        setBackground(Color.orange);
+        setBackground(new Color(32,34,37)); // Creates grey background
     }
 
     @Override
     public void updateView() {
         actualRevenue.setText("Actuele opbrengst van vandaag: € "+String.format("%.2f",model.getActualDailyRevenue()));
-        excpectedRevenueString.setText("Verwachte opbrengst op basis van");
-        excpectedRevenue.setText("alle huidige geparkeerde klanten: € "+String.format("%.2f",model.getExpectedRevenue()));
+        expectedRevenueString.setText("Verwachte opbrengst op basis van");
+        expectedRevenue.setText("alle huidige geparkeerde klanten: € "+String.format("%.2f",model.getExpectedRevenue()));
         dailyRevenue.setText("Totale opbrengst van de vorige dag: € " + String.format("%.2f",model.getDailyRevenue()));
         repaint();
     }

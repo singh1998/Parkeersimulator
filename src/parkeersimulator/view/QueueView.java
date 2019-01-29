@@ -27,7 +27,7 @@ public class QueueView extends AbstractView{
         super(model);
         queueInfo=new JLabel("Rij informatie");
         ignoreInfo=new JLabel("Aantal klanten dat vandaag verder reed omdat ze de ingangsrij te lang vonden");
-        Font font=new Font(queueInfo.getFont().getName(),Font.BOLD,15);
+        Font font=new Font(queueInfo.getFont().getName(),Font.BOLD,20);
         queueInfo.setFont(font);
         ignoreInfo.setFont(font);
 
@@ -42,7 +42,16 @@ public class QueueView extends AbstractView{
         ignoringTotal=new JLabel();
         previousIgnoringTotal=new JLabel();
 
-
+        queueInfo.setForeground(new Color(201,201,201));
+        ignoreInfo.setForeground(new Color(201,201,201));
+        nonSubcriptionCustomers.setForeground(new Color(201,201,201));
+        subscriptionCustomers.setForeground(new Color(201,201,201));
+        payingCustomers.setForeground(new Color(201,201,201));
+        leavingCustomers.setForeground(new Color(201,201,201));
+        ignoringPaidCustomerAmount.setForeground(new Color(201,201,201));
+        ignoringSubscribedCustomerAmount.setForeground(new Color(201,201,201));
+        ignoringTotal.setForeground(new Color(201,201,201));
+        previousIgnoringTotal.setForeground(new Color(201,201,201));
 
         this.setLayout(new GridLayout(10,1));
         add(queueInfo);
@@ -58,7 +67,7 @@ public class QueueView extends AbstractView{
 
 
         this.setBorder(new EmptyBorder(30,30,30,30));
-         setBackground(new Color(225,225,208));
+         setBackground(new Color(60,63,65)); // Creates grey background
     }
     @Override
     public void updateView() {
