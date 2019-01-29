@@ -37,7 +37,7 @@ public class Model extends AbstractModel {
     private int previousTotalIgnoring;//the total cars that drove away because the queue's were too long of the previous day
 
     private CarQueue entranceCarQueue;
-    private int queueLimit=15;
+    private int queueLimit;
     private CarQueue entrancePassQueue;
     private CarQueue paymentCarQueue;
     private CarQueue exitCarQueue;
@@ -78,6 +78,7 @@ public class Model extends AbstractModel {
         paidIgnoringCars=new ArrayList<>();
         passIgnoringCars=new ArrayList<>();
         reservedCarSpots=new ArrayList<>();
+        queueLimit=10;
 
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
@@ -305,26 +306,39 @@ public class Model extends AbstractModel {
 
         while (queue.carsInQueue()>0 &&
                 getNumberOfOpenSpots()>0 &&
-                i<enterSpeed) {
+                i<enterSpeed ){
 
             Car car = queue.removeCar();
 
             Location freeLocation;
 
-            i++;
-            if(car instanceof AdHocCar){
-                freeLocation=getFirstFreeLocation();
-                paidCars.add(car);
 
-            } else if(car instanceof ParkingPassCar){
-                freeLocation = getFirstFreePassLocation();
+            if((getAmountSubscribedCars()+getAmountReservedCars()+getAmountPaidCars()
+                    +getAmountReservedSpots())<(
+                    getNumberOfPlaces()*8)){
 
-                subscribedCars.add(car);
-            } else{
                 freeLocation=getFirstFreeLocation();
-                reservedCarSpots.add(car);
+                if(car instanceof AdHocCar){
+                    paidCars.add(car);
+                    setCarAt(freeLocation, car);
+
+                }
+                if(car instanceof RessCarLocation){
+
+                    reservedCarSpots.add(car);
+                    setCarAt(freeLocation, car);
+                }
+
             }
-            setCarAt(freeLocation, car);
+            if(getAmountSubscribedCars()<(getNumberOfPlaces()*4)&&car instanceof ParkingPassCar) {
+
+                freeLocation = getFirstFreePassLocation();
+                subscribedCars.add(car);
+                setCarAt(freeLocation, car);
+
+            }
+            i++;
+
         }
     }
     public void carsReadyToLeave(){
@@ -370,7 +384,7 @@ public class Model extends AbstractModel {
         // Get the average number of cars that arrive per hour.
         int averageNumberOfCarsPerHour;
         //weekday
-        if(day<5){
+        if(day<4){
             //thursday is bargainnight(koopavond), in groningen from 18.00 to 21.00 selfmade
             if(day==3) {
                 if(hour==18 || hour==19 || hour==20 || hour==21){
@@ -389,7 +403,7 @@ public class Model extends AbstractModel {
             //most of the time around 8 (oosterpoort)
 
             if(hour==20){
-                averageNumberOfCarsPerHour=weekend+100;
+                averageNumberOfCarsPerHour=weekend+1000;
             } else {
                 averageNumberOfCarsPerHour = weekend;
             }
@@ -405,28 +419,31 @@ public class Model extends AbstractModel {
         switch(type) {
             case AD_HOC:
                 for (int i = 0; i < numberOfCars; i++) {
-                    if(entranceCarQueue.carsInQueue()<=queueLimit) {
+                    if(getPayingArrivingCars()<=queueLimit){
                         entranceCarQueue.addCar(new AdHocCar());
                     } else {
-                        paidIgnoringCars.add(new AdHocCar() );
+
+                        paidIgnoringCars.add(new AdHocCar());
                     }
                 }
                 break;
             case PASS:
                 for (int i = 0; i < numberOfCars; i++) {
-                    if(entrancePassQueue.carsInQueue()<queueLimit) {
+                    if(getSubscribtionArrivingCars()<=queueLimit){
                         entrancePassQueue.addCar(new ParkingPassCar());
                     } else {
+
                         passIgnoringCars.add(new ParkingPassCar());
                     }
                 }
                 break;
             case RESS:
                 for (int i = 0; i < numberOfCars; i++) {
-                    if(entrancePassQueue.carsInQueue()<queueLimit) {
+                    if(getSubscribtionArrivingCars()<=queueLimit){
                         entrancePassQueue.addCar(new RessCarLocation());
+                    } else {
 
-
+                        passIgnoringCars.add(new ParkingRessCar());
                     }
                 }
                 break;
@@ -450,6 +467,7 @@ public class Model extends AbstractModel {
     }
     //selfmade-get the number of cars that are  in the arrivingqueue  have a subscription
     public int getSubscribtionArrivingCars(){
+        System.out.println(entrancePassQueue.carsInQueue());
         return  entrancePassQueue.carsInQueue();
     }
 
