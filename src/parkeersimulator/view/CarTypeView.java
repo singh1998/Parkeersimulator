@@ -151,7 +151,7 @@ public class CarTypeView extends AbstractView {
         subscribed.setText("Klanten met abonnement: "+model.getAmountSubscribedCars()+"");
         paidreserved.setText("Klanten met reservering: "+model.getAmountReservedCars()+"");
         reserved.setText("Gereserveerde plekken: "+model.getAmountReservedSpots()+"");
-        spots.setText("Plekken vrij: "+(model.getNumberOfOpenSpots()-model.getAmountReservedCars())+"/"+model.getTotalSpots());
+        spots.setText("Plekken vrij: "+(model.getNumberOfOpenSpots())+"/"+model.getTotalSpots());
         total.setText("Totaal aantal klanten: "+(model.getAmountPaidCars()+model.getAmountSubscribedCars()+model.getAmountReservedCars()));
         repaint();
     }

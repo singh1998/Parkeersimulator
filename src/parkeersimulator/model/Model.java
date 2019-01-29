@@ -13,6 +13,8 @@ public class Model extends AbstractModel {
     private int numberOfPlaces;
     private int numberOfOpenSpots;
     private int steps;
+
+
     private Car[][][] cars;
     //selfmade check if hundred steps button is pressed
     private boolean hundredEnabled;
@@ -27,6 +29,7 @@ public class Model extends AbstractModel {
     private ArrayList<Car> paidCars;
     private ArrayList<Car> subscribedCars;
     private ArrayList<Car> reservedCars;
+    private ArrayList<Car> reservedCarSpots;
     //selfmade lists for cars that think the entrancequeue is too long and go away
     private ArrayList<Car> paidIgnoringCars;
     private ArrayList<Car> passIgnoringCars;
@@ -61,9 +64,10 @@ public class Model extends AbstractModel {
 
 
     private double pricePerHour = 2.00; // price per minute per car
+    private double reservationPrice=10.00;
     private double previousDailyRevenue = 0; // revenue earned per day
     private double actualDailyRevenue=0;
-    private double ExpectedRevenue=0;
+    private double expectedRevenue=0;
 
     public Model(int numberOfFloors, int numberOfRows, int numberOfPlaces) {
         ticks=new Thread(new TickThread(this));
@@ -73,6 +77,7 @@ public class Model extends AbstractModel {
         reservedCars=new ArrayList<>();
         paidIgnoringCars=new ArrayList<>();
         passIgnoringCars=new ArrayList<>();
+        reservedCarSpots=new ArrayList<>();
 
         this.numberOfFloors = numberOfFloors;
         this.numberOfRows = numberOfRows;
@@ -166,53 +171,20 @@ public class Model extends AbstractModel {
         if(car instanceof ParkingPassCar ){
             subscribedCars.remove(car);
         }
-        if(car instanceof AdHocCar){
+       else if(car instanceof AdHocCar){
             paidCars.remove(car);
+        } else if(car instanceof RessCarLocation) {
+
+        } else{
+            reservedCars.remove(car);
         }
+
         numberOfOpenSpots++;
 
         return car;
     }
-    public Location getFirstFreeLocation(int type) {
-        if(type == 1) {
-            for (int floor = 0; floor < getNumberOfFloors(); floor++) {
-                for (int row = 0; row < getNumberOfRows(); row++) {
-                    for (int place = 0; place < getNumberOfPlaces(); place++) {
-                        Location location = new Location(floor, row, place);
-                        if (getCarAt(location) == null) {
-                            return location;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-        else if(type == 2) {
-            int floor = 2;
-            for (int row = getNumberOfRows() - 1; row < getNumberOfRows() && (row == 0 || row > 0); row--) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
-                }
-            }
-            return null;
-        }
-        else if(type == 3) {
-            int floor = 1;
-            for (int row = getNumberOfRows() - 1; row < getNumberOfRows() && (row == 0 || row > 0); row--) {
-                for (int place = 0; place < getNumberOfPlaces(); place++) {
-                    Location location = new Location(floor, row, place);
-                    if (getCarAt(location) == null) {
-                        return location;
-                    }
-                }
-            }
-            return null;
-        }
-        return null;
-    }
+
+
 //cannot refactor duplicate code because of missing return statement error, if you return null, there will be an error
     public Car getFirstLeavingCar() {
     for (int floor = 0; floor < getNumberOfFloors(); floor++) {
@@ -228,6 +200,34 @@ public class Model extends AbstractModel {
     }
     return null;
 }
+    public Location getFirstFreeLocation() {
+        for (int floor = 0; floor <2; floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) == null) {
+                        return location;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+    public Location getFirstFreePassLocation() {
+        for (int floor = 2; floor <3; floor++) {
+            for (int row = 0; row < getNumberOfRows(); row++) {
+                for (int place = 0; place < getNumberOfPlaces(); place++) {
+                    Location location = new Location(floor, row, place);
+                    if (getCarAt(location) == null) {
+                        return location;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+
     public void changeLocation() {
         for (int floor = 0; floor < getNumberOfFloors(); floor++) {
             for (int row = 0; row < getNumberOfRows(); row++) {
@@ -301,28 +301,30 @@ public class Model extends AbstractModel {
     public void carsEntering(CarQueue queue){
         int i=0;
         // Remove car from the front of the queue and assign to a parking space.
+        //let the reservation cars change first
+
         while (queue.carsInQueue()>0 &&
                 getNumberOfOpenSpots()>0 &&
                 i<enterSpeed) {
-            Car car = queue.removeCar();
-            //selfplaced-check if car is a ParkingPassCar or a AdHocCar and the add the car to the correct countinlist and control Passspaces
-            Location freeLocation;
-            if(car instanceof ParkingPassCar ){
-                subscribedCars.add(car);
-                int type = 2;
-                freeLocation = getFirstFreeLocation(type);
 
-            } else if(car instanceof AdHocCar){
+            Car car = queue.removeCar();
+
+            Location freeLocation;
+
+            i++;
+            if(car instanceof AdHocCar){
+                freeLocation=getFirstFreeLocation();
                 paidCars.add(car);
-                int type = 1;
-                freeLocation = getFirstFreeLocation(type);
-            }
-            else{
-                int type = 3;
-                freeLocation = getFirstFreeLocation(type);
+
+            } else if(car instanceof ParkingPassCar){
+                freeLocation = getFirstFreePassLocation();
+
+                subscribedCars.add(car);
+            } else{
+                freeLocation=getFirstFreeLocation();
+                reservedCarSpots.add(car);
             }
             setCarAt(freeLocation, car);
-            i++;
         }
     }
     public void carsReadyToLeave(){
@@ -333,17 +335,10 @@ public class Model extends AbstractModel {
                 car.setIsPaying(true);
                 paymentCarQueue.addCar(car);
             }
-            else if(car instanceof RessCarLocation){
-                Location location = car.getLocation();
-                removeCarAt(location);
-                Car car2 = new ParkingRessCar();
-                paidCars.add(car2);
-                reservedCars.add(car2);
-                reservedCars.remove(car);
-                setCarAt(location, car2);
-            }
             else {
+
                 carLeavesSpot(car);
+
             }
             car = getFirstLeavingCar();
         }
@@ -394,7 +389,7 @@ public class Model extends AbstractModel {
             //most of the time around 8 (oosterpoort)
 
             if(hour==20){
-                averageNumberOfCarsPerHour=weekend+1000;
+                averageNumberOfCarsPerHour=weekend+100;
             } else {
                 averageNumberOfCarsPerHour = weekend;
             }
@@ -429,20 +424,25 @@ public class Model extends AbstractModel {
             case RESS:
                 for (int i = 0; i < numberOfCars; i++) {
                     if(entrancePassQueue.carsInQueue()<queueLimit) {
-                        Car car = new RessCarLocation();
-                        entrancePassQueue.addCar(car);
-                        reservedCars.add(car);
+                        entrancePassQueue.addCar(new RessCarLocation());
 
-                    } else {
-                        paidIgnoringCars.add(new ParkingRessCar());//niet zeker bij welke hij moet horen of dat er een nieuwe moet zijn.
+
                     }
                 }
                 break;
         }
     }
     private void carLeavesSpot(Car car){
-        removeCarAt(car.getLocation());
-        exitCarQueue.addCar(car);
+        Location location=car.getLocation();
+        removeCarAt(location);
+        if(car instanceof RessCarLocation){
+            reservedCarSpots.remove(car);
+           Car parkingRessCar=new ParkingRessCar();
+            setCarAt(location,parkingRessCar);
+            reservedCars.add(parkingRessCar);
+        } else {
+            exitCarQueue.addCar(car);
+        }
     }
     //selfmade-get the number of cars that are in the arrivingqueue and don't have a subscription
     public int getPayingArrivingCars(){
@@ -468,23 +468,15 @@ public class Model extends AbstractModel {
     }
     //selfmade-get the amount of cars that had reserved in the garage
     public int getAmountReservedCars(){
-        int amount = 0;
-        for( Car car : reservedCars) {
-            if (car instanceof ParkingRessCar) {
-                amount++;
-            }
-        }
-        return amount;
+        return reservedCars.size();
     }
     //selfmade-get the amount of reserved spots in the garage
     public int getAmountReservedSpots(){
-        int amount = 0;
-        for( Car car : reservedCars) {
-            if (car instanceof RessCarLocation) {
-                amount++;
-            }
-        }
-        return amount;
+
+
+            return reservedCarSpots.size();
+
+
     }
     //selfmade-get the amount of subscribed cars in the parking garage
     public int getAmountSubscribedCars(){
@@ -513,24 +505,39 @@ public class Model extends AbstractModel {
     //selfmade-Calculates the price per customer that pays and ads it to the  actual revenue of the current day
     public void calculatePrice(Car car)
     {
-       actualDailyRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour;
+        if(car instanceof ParkingRessCar){
+            actualDailyRevenue+=(((double)car.getStayMinutes()/(double)60)*pricePerHour)+reservationPrice;
+        } else {
+            actualDailyRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour;
+        }
+
     }
     //selfmade-Calculates the excpected price per customer that is in the garage and has not paid yet
-    public void calculateExpectedRevenue(Car car){ ExpectedRevenue+=((double)car.getStayMinutes()/(double)60)*pricePerHour; }
+    public void calculateExpectedRevenue(Car car){
+        if(car instanceof ParkingRessCar){
+            expectedRevenue += (((double) car.getStayMinutes() / (double) 60) * pricePerHour)+reservationPrice;
+        } else {
+            expectedRevenue += ((double) car.getStayMinutes() / (double) 60) * pricePerHour;
+        }
+    }
     //selfmade
     public int getPaidQueueIgnorers(){
         return paidIgnoringCars.size();
     }
+    
     public int getPassQueueIgnorers(){
         return passIgnoringCars.size();
     }
     //selfmade- return the revenue that is expected to be earned, from the customers that are still parked
     public double getExpectedRevenue(){
-        ExpectedRevenue=0;
+        expectedRevenue=0;
         for(Car car: paidCars){
             calculateExpectedRevenue(car);
         }
-        return ExpectedRevenue;
+        for(Car car: reservedCars){
+            calculateExpectedRevenue(car);
+        }
+        return expectedRevenue;
     }
     //selfmade-Get the  daily revenue of the previous day
     public double getDailyRevenue()
