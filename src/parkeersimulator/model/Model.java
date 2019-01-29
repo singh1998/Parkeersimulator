@@ -313,7 +313,7 @@ public class Model extends AbstractModel {
             Location freeLocation;
 
 
-            if((getAmountSubscribedCars()+getAmountReservedCars()+getAmountPaidCars()
+            if((getAmountReservedSpots()+getAmountReservedCars()+getAmountPaidCars()
                     +getAmountReservedSpots())<(
                     getNumberOfPlaces()*8)){
 
@@ -388,7 +388,7 @@ public class Model extends AbstractModel {
             //thursday is bargainnight(koopavond), in groningen from 18.00 to 21.00 selfmade
             if(day==3) {
                 if(hour==18 || hour==19 || hour==20 || hour==21){
-                    averageNumberOfCarsPerHour =200;
+                    averageNumberOfCarsPerHour =weekDay*2;
                 } else {
                     averageNumberOfCarsPerHour = weekDay;
                 }
