@@ -53,7 +53,7 @@ public class Model extends AbstractModel {
     private int weekDayArrivals= 100; // average number of arriving cars per hour
     private int weekendArrivals = 200; // average number of arriving cars per hour
     private  int weekDayPassArrivals= 50; // average number of arriving cars per hour
-    private int weekendPassArrivals = 5; // average number of arriving cars per hour
+    private int weekendPassArrivals = 100; // average number of arriving cars per hour
     private int weekDayRessArrivals = 20; //MOET VERANDERD WORDEN!
     private int weekendRessArrivals = 30; //MOET VERANDERD WORDEN!
 
@@ -216,7 +216,7 @@ public class Model extends AbstractModel {
     }
     public Location getFirstFreePassLocation() {
         for (int floor = 2; floor <3; floor++) {
-            for (int row = 0; row < getNumberOfRows(); row++) {
+            for (int row = getNumberOfRows() - 1; row < getNumberOfRows() && (row == 0 || row > 0); row--) {
                 for (int place = 0; place < getNumberOfPlaces(); place++) {
                     Location location = new Location(floor, row, place);
                     if (getCarAt(location) == null) {
@@ -314,20 +314,21 @@ public class Model extends AbstractModel {
 
 
             if((getAmountReservedSpots()+getAmountReservedCars()+getAmountPaidCars()
-                    +getAmountReservedSpots())<(
-                    getNumberOfPlaces()*8)){
+                  )<(
+                    getNumberOfPlaces()*8)&&(car instanceof AdHocCar || car instanceof RessCarLocation)){
 
                 freeLocation=getFirstFreeLocation();
                 if(car instanceof AdHocCar){
                     paidCars.add(car);
-                    setCarAt(freeLocation, car);
+
 
                 }
                 if(car instanceof RessCarLocation){
 
                     reservedCarSpots.add(car);
-                    setCarAt(freeLocation, car);
+
                 }
+                setCarAt(freeLocation, car);
 
             }
             if(getAmountSubscribedCars()<(getNumberOfPlaces()*4)&&car instanceof ParkingPassCar) {
@@ -403,7 +404,10 @@ public class Model extends AbstractModel {
             //most of the time around 8 (oosterpoort)
 
             if(hour==20){
-                averageNumberOfCarsPerHour=weekend+1000;
+                averageNumberOfCarsPerHour=weekend+(1000-
+                        (weekendArrivals+weekendPassArrivals+weekendRessArrivals))/3;
+                //(1000-total per hour in weekend()/)3
+
             } else {
                 averageNumberOfCarsPerHour = weekend;
             }
@@ -612,6 +616,13 @@ public class Model extends AbstractModel {
         else if(actualDailyRevenue >= 8000 && actualDailyRevenue < 9000)
         {
             return "€8.000 bereikt";
+        }
+        else if(actualDailyRevenue >= 9000 && actualDailyRevenue < 10000)
+        {
+            return "€9.000 bereikt";
+        }  else if(actualDailyRevenue >= 10000 && actualDailyRevenue < 11000)
+        {
+            return "€10.000 bereikt";
         }
         return "";
     }

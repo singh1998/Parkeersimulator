@@ -8,7 +8,7 @@ public class RessCarLocation extends Car {
 
 
     public RessCarLocation() {
-        int stayMinutes =  15;
+        int stayMinutes =15 ;
         this.setMinutesLeft(stayMinutes);
         this.setHasToPay(false);
     }

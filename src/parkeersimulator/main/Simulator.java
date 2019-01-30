@@ -61,7 +61,7 @@ public class Simulator extends JFrame {
 
         ondervlak.add(carTypeView);
         ondervlak.add(controller);
-        ondervlak.setLayout(new FlowLayout());
+        ondervlak.setLayout(new BoxLayout(ondervlak,BoxLayout.X_AXIS));
 
 
 

@@ -45,7 +45,8 @@ public class TickThread implements Runnable{
             tickPause=0;
         }
         advanceTime();
-        handleEntrance();
+        handleExit();
+
         //Pause.
         //
         try {
@@ -54,8 +55,8 @@ public class TickThread implements Runnable{
             e.printStackTrace();
         }
         //
-        handleExit();
 
+        handleEntrance();
         model.updateRevenuesAndResetIgnoreQueue();
         updateViews();
 
