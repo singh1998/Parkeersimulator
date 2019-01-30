@@ -14,7 +14,10 @@ public class TimeView extends AbstractView {
     private int steps;
     private JLabel timeInfo;
 
-
+    /**
+     * Constructer of TimeView
+     * @param model a variable of Model type.
+     */
     public TimeView(Model model){
         super(model);
 

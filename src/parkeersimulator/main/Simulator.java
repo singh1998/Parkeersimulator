@@ -66,10 +66,10 @@ public class Simulator extends JFrame {
         main.add(ondervlak,BorderLayout.SOUTH);
 
 
+
+        ondervlak.setLayout(new BoxLayout(ondervlak,BoxLayout.LINE_AXIS));
         ondervlak.add(carTypeView);
         ondervlak.add(controller);
-        ondervlak.setLayout(new BoxLayout(ondervlak,BoxLayout.X_AXIS));
-
 
 
         contentPane.add(main, BorderLayout.CENTER);

@@ -15,8 +15,8 @@ import java.awt.*;
 public class CarTypeView extends AbstractView {
     private JLabel red;
     private JLabel blue;
-    private JLabel gray;
-    private JLabel lightgray;
+    private JLabel green;
+    private JLabel black;
     private JLabel reserved;
     private JLabel paidreserved;
     private JLabel paid;
@@ -38,8 +38,8 @@ public class CarTypeView extends AbstractView {
      */
     public CarTypeView(Model model){
         super(model);
-        lightgray=new JLabel();
-        gray=new JLabel();
+        black=new JLabel();
+        green=new JLabel();
         red=new JLabel();
         blue=new JLabel();
 
@@ -111,11 +111,11 @@ public class CarTypeView extends AbstractView {
         add(subscribed);
         add(field3);
         add(field4);
-        add(gray);
+        add(green);
         add(paidreserved);
         add(field5);
         add(field6);
-        add(lightgray);
+        add(black);
         add(reserved);
         add(field7);
         add(field8);
@@ -132,10 +132,10 @@ public class CarTypeView extends AbstractView {
         reserved.setFont(new FontClass());
         total.setFont(new FontClass());
 
-        gray.setBackground(Color.gray); // Makes the JLabel grey
-        gray.setOpaque(true);
-        lightgray.setBackground(Color.lightGray); // Makes the JLabel light grey
-        lightgray.setOpaque(true);
+        green.setBackground(Color.green); // Makes the JLabel grey
+        green.setOpaque(true);
+        black.setBackground(Color.black); // Makes the JLabel light grey
+        black.setOpaque(true);
         blue.setBackground(Color.blue); // Makes the JLabel blue
         blue.setOpaque(true);
         red.setBackground(Color.red); // Makes the JLabel red
@@ -158,12 +158,13 @@ public class CarTypeView extends AbstractView {
      *
      */
     public void updateView() {
-        paid.setText("Reguliere klanten: "+model.getAmountPaidCars());
-        subscribed.setText("Klanten met abonnement: "+model.getAmountSubscribedCars()+"");
-        paidreserved.setText("Klanten met reservering: "+model.getAmountReservedCars()+"");
-        reserved.setText("Gereserveerde plekken: "+model.getAmountReservedSpots()+"");
-        spots.setText("Plekken vrij: "+(model.getNumberOfOpenSpots())+"/"+model.getTotalSpots());
-        total.setText("Totaal aantal klanten: "+(model.getAmountPaidCars()+model.getAmountSubscribedCars()+model.getAmountReservedCars()));
+
+        paid.setText("Reguliere klanten: "+String.format("%3d",model.getAmountPaidCars()));
+        subscribed.setText("Klanten met abonnement: "+String.format("%3d",model.getAmountSubscribedCars()));
+        paidreserved.setText("Klanten met reservering: "+String.format("%3d",model.getAmountReservedCars()));
+        reserved.setText("Gereserveerde plekken: "+String.format("%3d",model.getAmountReservedSpots()));
+        spots.setText("Plekken vrij: "+(String.format("%3d",model.getNumberOfOpenSpots()))+"/"+String.format("%3d",model.getTotalSpots()));
+        total.setText("Totaal aantal klanten: "+String.format("%3d",(model.getAmountPaidCars()+model.getAmountSubscribedCars()+model.getAmountReservedCars())));
         repaint();
     }
 }

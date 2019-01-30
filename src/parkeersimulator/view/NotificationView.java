@@ -24,7 +24,7 @@ public class NotificationView extends AbstractView{
     public NotificationView(Model model)
     {
         super(model);
-        messageTitle = new JLabel("Meldingen:");
+        messageTitle = new JLabel(String.format("%-20s","Meldingen:"));
         notification = new JLabel();
         notification2 = new JLabel();
         notification3 = new JLabel();

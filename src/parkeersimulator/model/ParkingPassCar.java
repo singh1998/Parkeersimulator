@@ -1,19 +1,15 @@
-/**
- * This class represents a car of a subscription-customer
- * @version 2.0
- * @Author Park-It
- */
 package parkeersimulator.model;
 
 import java.util.Random;
 import java.awt.*;
 
+/**
+ * Constructor for objects class AdHocCar
+ */
 public class ParkingPassCar extends Car {
-	private static final Color COLOR=Color.blue;
+    private static final Color COLOR=Color.blue;
 
-    /**
-     * Constructor for objects of class ParkingPassCar
-     */
+
     public ParkingPassCar() {
 
         this.setMinutesLeft(stayMinutes);
@@ -26,6 +22,6 @@ public class ParkingPassCar extends Car {
      * @return an enum with a color
      */
     public Color getColor(){
-    	return COLOR;
+        return COLOR;
     }
 }

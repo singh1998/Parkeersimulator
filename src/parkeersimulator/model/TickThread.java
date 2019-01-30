@@ -98,7 +98,7 @@ public class TickThread implements Runnable{
     }
     private void advanceTime(){
         // Advance the time by one minute.
-
+        model.carCheckTime();
         model.incrementMinute();
         model.setSteps();
         while (model.getMinutes() > 59) {

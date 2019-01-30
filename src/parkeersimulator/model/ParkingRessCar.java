@@ -4,9 +4,11 @@ import java.util.Random;
 import java.awt.*;
 
 public class ParkingRessCar extends Car {
-    private static final Color COLOR=Color.gray;
+    private static final Color COLOR=Color.green;
 
-
+    /**
+     * Constructor for objects of class ParkingRessCar
+     */
     public ParkingRessCar() {
         Random random = new Random();
         int stayMinutes = (int) (15 + random.nextFloat() * 3 * 60);
@@ -15,7 +17,10 @@ public class ParkingRessCar extends Car {
     }
 
 
-
+    /**
+     * Retrieves the color of the car
+     * @return a Color data type.
+     */
     public Color getColor(){
         return COLOR;
     }
