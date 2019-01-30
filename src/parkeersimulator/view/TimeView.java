@@ -71,9 +71,9 @@ public class TimeView extends AbstractView {
     public void updateView() {
 
             timeInfo.setText("Tijd:");
-            step.setText("Stappen in deze week: " + model.getSteps());
-             hour.setText("Uren: "+model.getHours());
-            minute.setText("Minuten: "+model.getMinutes());
+            step.setText("Stappen in deze week: " +String.format("%4d",model.getSteps()));
+             hour.setText("Uren: "+String.format("%2d",model.getHours()));
+            minute.setText("Minuten: "+String.format("%2d",model.getMinutes()));
 
             day.setText("Dag: "+model.getDay());
 
