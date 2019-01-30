@@ -1,3 +1,8 @@
+/**
+ * This class represents  all the components that the application is built with
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.main;
 
 import parkeersimulator.controller.Controller;
@@ -27,7 +32,9 @@ public class Simulator extends JFrame {
 
 
 
-
+    /**
+     * Constructor for objects of class Simulator
+     */
     public Simulator(){
         this.setBackground(new Color(43,43,43)); // Makes the background dark grey
         this.setTitle("parkeersimulator");

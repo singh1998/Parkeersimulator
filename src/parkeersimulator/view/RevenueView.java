@@ -1,3 +1,9 @@
+/**
+ * This class describes information about the revenue of the parking garage
+ *
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.view;
 
 import parkeersimulator.model.Model;
@@ -12,6 +18,9 @@ public class RevenueView extends AbstractView{
     private JLabel expectedRevenueString;
     private JLabel expectedRevenue;
 
+    /**
+     * Constructor for objects of class RevenueView
+     */
     public RevenueView(Model model) {
         super(model);
        dailyRevenue=new JLabel();
@@ -41,6 +50,10 @@ public class RevenueView extends AbstractView{
     }
 
     @Override
+    /**
+     * This method updates this view
+     *
+     */
     public void updateView() {
         actualRevenue.setText("Actuele opbrengst van vandaag: € "+String.format("%.2f",model.getActualDailyRevenue()));
         expectedRevenueString.setText("Verwachte opbrengst op basis van");

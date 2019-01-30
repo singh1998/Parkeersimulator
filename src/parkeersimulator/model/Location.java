@@ -1,3 +1,8 @@
+/**
+ * This class represent a location in the parking garage
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.model;
 
 public class Location {

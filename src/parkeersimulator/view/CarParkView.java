@@ -1,3 +1,8 @@
+/**
+ * This class represents a view where our parking garage is simulated
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.view;
 
 import parkeersimulator.model.Car;
@@ -16,7 +21,7 @@ import java.awt.*;
         private Image carParkImage;
 
         /**
-         * Constructor for objects of class CarPark
+         * Constructor for objects of class CarParkView
          */
         public CarParkView(Model model ) {
             super(model);
@@ -41,6 +46,7 @@ import java.awt.*;
         /**
          * Overridden. The car park view component needs to be redisplayed. Copy the
          * internal image to screen.
+         * @param g the form of a place
          */
         public void paintComponent(Graphics g) {
             if (carParkImage == null) {
@@ -56,7 +62,10 @@ import java.awt.*;
                 g.drawImage(carParkImage, 0, 0, currentSize.width, currentSize.height, null);
             }
         }
-
+        /**
+         * This method updates this view
+         *
+         */
         public void updateView() {
             // Create a new car park image if the size has changed.
             if (!size.equals(getSize())) {
@@ -79,6 +88,9 @@ import java.awt.*;
 
         /**
          * Paint a place on this car park view in a given color.
+         * @param graphics the form of the place
+         * @param location the location of a place
+         * @param color The color of the a place
          */
         private void drawPlace(Graphics graphics, Location location, Color color) {
             graphics.setColor(color);

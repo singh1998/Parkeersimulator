@@ -1,3 +1,9 @@
+/**
+ * This is a view that shows notifications
+ *
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.view;
 
 import parkeersimulator.model.Model;
@@ -12,7 +18,9 @@ public class NotificationView extends AbstractView{
     private JLabel notification2;
     private JLabel notification3;
     private JLabel notification4;
-
+    /**
+     * Constructor for objects of class NotificationView
+     */
     public NotificationView(Model model)
     {
         super(model);
@@ -46,6 +54,10 @@ public class NotificationView extends AbstractView{
     }
 
     @Override
+    /**
+     * This method updates this view
+     *
+     */
     public void updateView()
     {
         notification.setText(model.revenueMessage());

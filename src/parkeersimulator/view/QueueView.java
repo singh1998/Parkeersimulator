@@ -1,3 +1,9 @@
+/**
+ * This class describes information about the queue's in the simulation
+ *
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.view;
 
 import parkeersimulator.model.Model;
@@ -21,8 +27,9 @@ public class QueueView extends AbstractView{
 
 
 
-
-
+    /**
+     * Constructor for objects of class QueueView
+     */
     public QueueView(Model model){
         super(model);
 
@@ -94,6 +101,10 @@ public class QueueView extends AbstractView{
          setBackground(new Color(60,63,65)); // Creates grey background
     }
     @Override
+    /**
+     * This method updates this view
+     *
+     */
     public void updateView() {
         nonSubcriptionCustomers.setText("Grootte van de ingangsrij voor reguliere kanten: "+model.getPayingArrivingCars());
         subscriptionCustomers.setText("Grootte van de ingangsrij voor klanten met abonnement : "+model.getSubscribtionArrivingCars());

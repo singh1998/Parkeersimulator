@@ -1,3 +1,8 @@
+/**
+ * This class represents the menubar of the application
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.controller;
 
 import parkeersimulator.model.Model;
@@ -7,6 +12,9 @@ import java.awt.event.KeyEvent;
 
 public class MenuBarController extends JMenuBar {
     private Model model;
+    /**
+     * Constructor for objects of class MenuBarController
+     */
     public MenuBarController(Model model) {
         this.model = model;
 

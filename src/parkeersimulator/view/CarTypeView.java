@@ -1,3 +1,9 @@
+/**
+ * This class describes the view that serves as legend for the parking garage
+ * It also displays information and information per legend-item.
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.view;
 
 import parkeersimulator.model.Model;
@@ -27,7 +33,9 @@ public class CarTypeView extends AbstractView {
     private JLabel field9;
     private JLabel field10;
     private JLabel total;
-
+    /**
+     * Constructor for objects of class CarTypeView
+     */
     public CarTypeView(Model model){
         super(model);
         lightgray=new JLabel();
@@ -145,7 +153,10 @@ public class CarTypeView extends AbstractView {
 
     }
     @Override
-    // Updates the CarTypeView
+    /**
+     * This method updates this view
+     *
+     */
     public void updateView() {
         paid.setText("Reguliere klanten: "+model.getAmountPaidCars());
         subscribed.setText("Klanten met abonnement: "+model.getAmountSubscribedCars()+"");

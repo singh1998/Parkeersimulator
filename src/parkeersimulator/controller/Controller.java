@@ -1,3 +1,8 @@
+/**
+ * This class represents the menubar buttons that control the simulation
+ * @version 2.0
+ * @Author Park-It
+ */
 package parkeersimulator.controller;
 
 import parkeersimulator.model.Model;
@@ -15,6 +20,10 @@ public class Controller extends AbstractController {
     private JButton button2;
     private JButton button3;
     private JButton button4;
+
+    /**
+     * Constructor for objects of class Controller
+     */
     public Controller(Model model) {
         super(model);
         Border raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
